@@ -64,10 +64,17 @@ Section ids are fixed: `#work`, `#experience`, `#stack`, `#about`, `#contact`.
    - Frontend: React, SwiftUI / SwiftData
    - Infra: Kubernetes, Helm, Docker, Jenkins, NGINX Plus, HashiCorp Vault, GCP
    - Data: PostgreSQL, GCP Cloud SQL, Liquibase, Amazon S3
-5. **About** (`#about`) — copy, pinned: "Outside work I build small, dependency-light tools in Go,
-   Python and Swift — usually to understand a system by rebuilding the part of it I don't
-   understand yet. I also shoot product photography." Last sentence links (absolute URL) to
-   `https://achyuta0001.github.io/photography-portfolio/`.
+5. **About** (`#about`) — copy, pinned (three paragraphs, revised 2026-10-04 with owner):
+   1. "Outside work I build small, dependency-light tools in Go, Python and Swift — usually to
+      understand a system by rebuilding the part of it I don't understand yet."
+   2. "ashlar started as a question about the storage engine underneath Kafka: what actually happens
+      to a log when the machine dies mid-write. hive and obsidian-mcp came from wanting AI agents to
+      keep the context my projects already have."
+   3. "I keep them small on purpose: standard library first, no backend unless it earns one, and
+      tests that try to break the thing — ashlar's fuzz test cuts the log at a random byte and
+      checks what survives." followed by the link "Away from the keyboard I shoot product
+      photography." (absolute URL) to `https://achyuta0001.github.io/photography-portfolio/`.
+   No certifications and no Goo line (owner's call).
 6. **Contact** (`#contact`) — "Let's work together": email (achyuta0001@gmail.com), GitHub,
    LinkedIn (`https://linkedin.com/in/achyuta-k-upadya`), resume PDF (`/resume.pdf`).
 7. **Footer** — `Bengaluru · <time>HH:MM</time> IST`, theme toggle button, `© <year> Achyuta K Upadya`.

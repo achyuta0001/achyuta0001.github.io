@@ -1,7 +1,13 @@
 ---
 import { profile } from '../data/site';
+const last = profile.about.length - 1;
 ---
 <section id="about" class="section" data-reveal tabindex="-1" aria-labelledby="about-h">
   <h2 id="about-h">About</h2>
-  <p>{profile.about} <a href={profile.photography.href}>{profile.photography.label}</a></p>
+  {profile.about.map((para, i) => (
+    <p>
+      {para}
+      {i === last && <> <a href={profile.photography.href}>{profile.photography.label}</a></>}
+    </p>
+  ))}
 </section>

@@ -30,9 +30,12 @@ export const profile = {
   tagline:
     'I work on the unglamorous half of shipping — getting services from a laptop to production and keeping them there.',
   email: 'achyuta0001@gmail.com',
-  about:
+  about: [
     'Outside work I build small, dependency-light tools in Go, Python and Swift — usually to understand a system by rebuilding the part of it I don’t understand yet.',
-  photography: { label: 'I also shoot product photography.', href: links.photography.href },
+    'ashlar started as a question about the storage engine underneath Kafka: what actually happens to a log when the machine dies mid-write. hive and obsidian-mcp came from wanting AI agents to keep the context my projects already have.',
+    'I keep them small on purpose: standard library first, no backend unless it earns one, and tests that try to break the thing — ashlar’s fuzz test cuts the log at a random byte and checks what survives.',
+  ],
+  photography: { label: 'Away from the keyboard I shoot product photography.', href: links.photography.href },
 };
 
 export const meta = {
