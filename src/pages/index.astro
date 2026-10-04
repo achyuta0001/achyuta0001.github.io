@@ -7,6 +7,10 @@ import Stack from '../components/Stack.astro';
 import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
+import CommandPalette from '../islands/CommandPalette';
+import { profile, sections, links, projects } from '../data/site';
+const paletteLinks = [links.github, links.linkedin, links.resume, links.photography];
+const paletteProjects = projects.map((p) => ({ title: p.title, href: p.href }));
 ---
 <Base>
   <Hero />
@@ -18,6 +22,7 @@ import Footer from '../components/Footer.astro';
     <Contact />
   </main>
   <Footer />
+  <CommandPalette client:idle email={profile.email} sections={sections} links={paletteLinks} projects={paletteProjects} />
 </Base>
 <script>
   import { initReveal } from '../scripts/reveal';
