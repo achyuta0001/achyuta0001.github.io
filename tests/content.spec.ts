@@ -43,6 +43,14 @@ test('contact links and photography link are correct', async ({ page }) => {
   await expect(page.locator('#about a')).toHaveAttribute('href', 'https://achyuta0001.github.io/photography-portfolio/');
 });
 
+test('about tells the side-project story in three paragraphs', async ({ page }) => {
+  await page.goto('/');
+  const paras = page.locator('#about p');
+  await expect(paras).toHaveCount(3);
+  await expect(paras.nth(1)).toContainText('ashlar started as a question');
+  await expect(paras.nth(2).getByRole('link')).toHaveText('Away from the keyboard I shoot product photography.');
+});
+
 test('phone number never appears', async ({ page }) => {
   await page.goto('/');
   expect(await page.content()).not.toMatch(/\+91|\b\d{10}\b|\b\d{5}\s\d{5}\b/);
