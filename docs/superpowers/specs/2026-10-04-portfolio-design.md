@@ -207,10 +207,12 @@ markup.
 - Manual rendered verification: screenshots in light, dark and 360px mobile before calling done.
 - Work committed in several focused commits, not one dump.
 
-## Open items (need owner decision before deploy)
+## Owner decisions (2026-10-04)
 
-1. Resume PDF contains the phone number. Ship as-is, or a phone-free copy?
-2. GitHub profile README says "Pune"; update it to Bengaluru for consistency? (separate repo)
+1. `/resume.pdf` is a phone-free copy generated from `resume_master.md` (phone removed), styled
+   with `~/Developer/job-search/resume.css`. The original PDF is not shipped.
+2. GitHub profile README (`achyuta0001/achyuta0001`) gets "Pune" → "Bengaluru" in a separate
+   one-line commit.
 
 ## Out of scope
 
