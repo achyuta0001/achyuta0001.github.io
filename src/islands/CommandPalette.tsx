@@ -55,7 +55,7 @@ export default function CommandPalette({ email, sections, links, projects }: Pro
     setOpen(false);
     const el = returnTo.current;
     returnTo.current = null;
-    el?.focus();
+    el?.focus({ preventScroll: true });
   };
 
   const go = (id: string) => {
@@ -71,7 +71,7 @@ export default function CommandPalette({ email, sections, links, projects }: Pro
 
   const openLink = (href: string) => {
     setOpen(false);
-    window.open(href, href.startsWith('http') ? '_blank' : '_self', 'noopener');
+    window.open(href, '_blank', 'noopener');
   };
 
   const copyEmail = async () => {

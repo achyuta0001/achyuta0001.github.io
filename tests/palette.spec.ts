@@ -37,11 +37,25 @@ test('navigate command scrolls to section and updates hash', async ({ page }) =>
   await page.goto('/');
   await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
+  await expect(page.getByRole('combobox')).toBeFocused();
   await page.keyboard.type('Contact');
   await page.keyboard.press('Enter');
   await expect(dialog(page)).toBeHidden();
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator('#contact')).toBeInViewport();
+});
+
+test('selected item has a visible non-colour-only indicator', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => window.__paletteReady === true);
+  await page.keyboard.press('Control+k');
+  const sel = page.locator('[cmdk-item][data-selected="true"]');
+  await expect(sel).toBeVisible();
+  const s = await sel.evaluate((e) => {
+    const c = getComputedStyle(e);
+    return { shadow: c.boxShadow, outline: c.outlineStyle };
+  });
+  expect(s.shadow !== 'none' || s.outline !== 'none').toBe(true);
 });
 
 test('copy email announces success', async ({ page, context }) => {
