@@ -1,0 +1,26 @@
+---
+import { employer } from '../data/site';
+---
+<section id="experience" class="section" data-reveal tabindex="-1" aria-labelledby="experience-h">
+  <h2 id="experience-h">Experience</h2>
+  <div class="employer">
+    <h3>{employer.name}</h3>
+    <p class="mono muted meta">{employer.location} · {employer.period}</p>
+  </div>
+  {employer.roles.map((r) => (
+    <article class="role">
+      <h4>{r.title} <span class="muted">— {r.team}</span></h4>
+      <p class="mono muted meta">{r.period}</p>
+      <p class="mono muted stackline">{r.stack}</p>
+      <ul>{r.bullets.map((b) => <li>{b}</li>)}</ul>
+    </article>
+  ))}
+</section>
+<style>
+  .employer h3 { margin: 0; font-size: 1rem; }
+  .meta { font-size: 0.8125rem; margin: 0.15rem 0 0; }
+  .role { margin-top: 1.75rem; }
+  .role h4 { margin: 0; font-size: 0.9375rem; font-weight: 600; }
+  .stackline { font-size: 0.75rem; margin: 0.35rem 0 0; }
+  .role ul { margin: 0.75rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; font-size: 0.9375rem; }
+</style>

@@ -1,0 +1,19 @@
+---
+import { profile, links } from '../data/site';
+const items = [links.github, links.linkedin, links.resume];
+---
+<section id="contact" class="section" data-reveal tabindex="-1" aria-labelledby="contact-h">
+  <h2 id="contact-h">Let’s work together</h2>
+  <p class="lead">Open to full-stack and platform roles. The fastest way to reach me is email.</p>
+  <p><a class="email" href={`mailto:${profile.email}`}>{profile.email}</a></p>
+  <ul class="contact-links mono">
+    {items.map((l) => (
+      <li><a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel={l.href.startsWith('http') ? 'noopener' : undefined}>{l.label}</a></li>
+    ))}
+  </ul>
+</section>
+<style>
+  .lead { margin-top: 0; }
+  .email { font-size: 1.25rem; font-weight: 500; }
+  .contact-links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; }
+</style>

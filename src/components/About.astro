@@ -1,0 +1,7 @@
+---
+import { profile } from '../data/site';
+---
+<section id="about" class="section" data-reveal tabindex="-1" aria-labelledby="about-h">
+  <h2 id="about-h">About</h2>
+  <p>{profile.about} <a href={profile.photography.href}>{profile.photography.label}</a></p>
+</section>
