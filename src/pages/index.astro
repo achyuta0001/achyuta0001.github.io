@@ -1,6 +1,17 @@
 ---
+import Base from '../layouts/Base.astro';
+import { profile } from '../data/site';
 ---
-<html lang="en">
-  <head><meta charset="utf-8" /><title>Achyuta K Upadya</title><link rel="icon" href="data:," /></head>
-  <body><h1>Achyuta K Upadya</h1></body>
-</html>
+<Base>
+  <main id="main">
+    <h1>{profile.name}</h1>
+  </main>
+  <footer class="site-footer">
+    <button type="button" class="theme-toggle" data-theme-toggle hidden>Theme</button>
+  </footer>
+</Base>
+<script>
+  import { initThemeButton } from '../scripts/theme';
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  if (btn) initThemeButton(btn);
+</script>

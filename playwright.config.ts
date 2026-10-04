@@ -9,6 +9,7 @@ export default defineConfig({
   use: { baseURL: 'http://localhost:4321' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
+    // --ignore-lock: Astro 7 preview auto-backgrounds under agent envs unless the lock is ignored.
     command: 'npm run preview -- --port 4321 --ignore-lock',
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
