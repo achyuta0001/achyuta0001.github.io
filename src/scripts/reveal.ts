@@ -1,8 +1,16 @@
+function safeDecode(s: string): string {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+}
+
 export function initReveal(): void {
   const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
   const reveal = (el: Element) => el.classList.add('in');
   const revealHash = () => {
-    const id = decodeURIComponent(location.hash.slice(1));
+    const id = safeDecode(location.hash.slice(1));
     const t = id ? document.getElementById(id) : null;
     if (t) reveal(t);
   };

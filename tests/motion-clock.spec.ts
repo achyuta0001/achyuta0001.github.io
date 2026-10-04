@@ -9,6 +9,14 @@ test('sections reveal when scrolled into view', async ({ page }) => {
   await expect.poll(() => contact.evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
 });
 
+test('malformed hash does not break reveal', async ({ page }) => {
+  await page.goto('/#%E0%A4%A');
+  const contact = page.locator('#contact');
+  await contact.scrollIntoViewIfNeeded();
+  await expect(contact).toHaveClass(/\bin\b/);
+  await expect.poll(() => contact.evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
+});
+
 test('deep link target is visible immediately', async ({ page }) => {
   await page.goto('/#contact');
   await expect(page.locator('#contact')).toHaveClass(/\bin\b/);
