@@ -61,3 +61,13 @@ h2 { font-size: 0.8125rem; font-family: var(--mono); font-weight: 500; color: va
 .skip { position: absolute; left: 12px; top: -48px; padding: 8px 12px; background: var(--fg); color: var(--bg); border-radius: 6px; z-index: 10; }
 .skip:focus { top: 12px; }
 button { font: inherit; color: inherit; }
+
+[data-reveal] { transition: opacity 500ms ease, transform 500ms ease; }
+html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(8px); }
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal]:not(.in) { opacity: 1; transform: none; }
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  html.js [data-reveal] { opacity: 1 !important; transform: none !important; }
+}

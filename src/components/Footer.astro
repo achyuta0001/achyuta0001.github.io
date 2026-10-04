@@ -11,6 +11,9 @@ const year = new Date().getFullYear();
   import { initThemeButton } from '../scripts/theme';
   const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
   if (btn) initThemeButton(btn);
+  import { startClock } from '../scripts/clock';
+  const clock = document.querySelector<HTMLTimeElement>('time[data-clock]');
+  if (clock) startClock(clock, document.querySelector<HTMLElement>('[data-year]'));
 </script>
 <style>
   .site-footer {
