@@ -6,7 +6,7 @@ OUT="$(cd "$(dirname "$0")/.." && pwd)/public/resume.pdf"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 sed -E 's/ ?\+91 ?[0-9 ]{10,12} ?·//' "$SRC/resume_master.md" > "$TMP/resume.md"
-if grep -q '[redacted]' "$TMP/resume.md"; then echo "phone still present" >&2; exit 1; fi
+if grep -q -E '\+91|[0-9]{10}|[0-9]{5} [0-9]{5}' "$TMP/resume.md"; then echo "phone still present" >&2; exit 1; fi
 cp "$SRC/resume.css" "$TMP/resume.css"
 (cd "$TMP" && npx --yes md-to-pdf resume.md --stylesheet resume.css \
   --pdf-options '{"format":"A4","margin":{"top":"12mm","bottom":"12mm","left":"10mm","right":"10mm"}}')

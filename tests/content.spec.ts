@@ -45,7 +45,7 @@ test('contact links and photography link are correct', async ({ page }) => {
 
 test('phone number never appears', async ({ page }) => {
   await page.goto('/');
-  expect(await page.content()).not.toContain('[redacted]');
+  expect(await page.content()).not.toMatch(/\+91|\b\d{10}\b|\b\d{5}\s\d{5}\b/);
 });
 
 test('landmarks and skip link exist', async ({ page }) => {
