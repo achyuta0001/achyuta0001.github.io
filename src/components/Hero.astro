@@ -25,9 +25,10 @@ import { profile } from '../data/site';
   .hero-tagline { margin: 0 0 2rem; max-width: 52ch; }
   .palette-trigger {
     display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.6rem;
-    border: 1px solid var(--line); border-radius: 6px; background: transparent; cursor: pointer;
+    border: 1px solid var(--muted); border-radius: 6px; background: transparent; cursor: pointer;
     font-size: 0.8125rem; color: var(--muted);
   }
+  :global(html:not(.js)) .palette-trigger { display: none; }
   .palette-trigger:hover { color: var(--fg); border-color: var(--muted); }
   kbd { font: inherit; }
 </style>
