@@ -1,0 +1,29 @@
+.palette {
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(480px, calc(100vh - 96px));
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--fg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.palette::backdrop { background: rgb(0 0 0 / 0.35); backdrop-filter: blur(2px); }
+.palette [cmdk-root] { display: flex; flex-direction: column; max-height: inherit; }
+.palette [cmdk-input] {
+  width: 100%; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--fg);
+  padding: 14px 16px; font: inherit; font-size: 15px; outline: none;
+}
+.palette [cmdk-list] { overflow: auto; max-height: 340px; padding: 6px; }
+.palette [cmdk-group-heading] { font: 500 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 10px 6px; }
+.palette [cmdk-item] { padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.palette [cmdk-item][data-selected='true'] { background: var(--line); color: var(--fg); box-shadow: inset 2px 0 0 var(--accent); }
+.palette [cmdk-empty] { padding: 16px; color: var(--muted); font-size: 14px; }
+.palette-foot { display: flex; justify-content: space-between; gap: 12px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.palette-foot [role='status'] { user-select: text; color: var(--fg); }
+@media (prefers-reduced-motion: no-preference) {
+  .palette[open] { animation: palette-in 160ms ease-out; }
+  @keyframes palette-in { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+}

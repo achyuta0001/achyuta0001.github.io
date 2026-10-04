@@ -1,0 +1,37 @@
+---
+import { stack } from '../data/site';
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+<section id="stack" class="section" data-reveal tabindex="-1" aria-labelledby="stack-h">
+  <h2 id="stack-h">Stack</h2>
+  <div class="tabs" data-tabs>
+    <div class="panels" data-tab-panels>
+      {stack.map((g) => (
+        <div class="panel" id={`stack-${slug(g.name)}`} data-tab-panel>
+          <h3>{g.name}</h3>
+          <ul class="chips">{g.items.map((it) => <li>{it}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  import { initTabs } from '../scripts/tabs';
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach(initTabs);
+</script>
+<style>
+  .panel h3 { font-size: 0.875rem; margin: 1.25rem 0 0.5rem; }
+  .panel:first-child h3 { margin-top: 0; }
+  .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chips li { border: 1px solid var(--line); border-radius: 8px; padding: 0.3rem 0.65rem; font-size: 0.875rem; }
+  .tabs-ready .panels { display: grid; }
+  .tabs-ready .panel { grid-area: 1 / 1; visibility: hidden; }
+  .tabs-ready .panel.is-active { visibility: visible; }
+  .tabs-ready .panel:focus-visible { outline-offset: 6px; }
+</style>
+<style is:global>
+  .tablist { position: relative; display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
+  .tab { background: none; border: 0; padding: 0.5rem 0.75rem; cursor: pointer; color: var(--muted); font-size: 0.8125rem; }
+  .tab[aria-selected='true'] { color: var(--fg); }
+  .tab-indicator { position: absolute; left: 0; bottom: -1px; height: 2px; background: var(--accent); transition: transform 250ms ease, width 250ms ease; }
+</style>

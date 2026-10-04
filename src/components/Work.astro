@@ -1,0 +1,52 @@
+---
+import { projects } from '../data/site';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section id="work" class="section" data-reveal tabindex="-1" aria-labelledby="work-h">
+  <h2 id="work-h">Selected work</h2>
+  <ol class="work-list">
+    {projects.map((p, i) => (
+      <li class="work-row">
+        <span class="num mono muted">{pad(i + 1)}</span>
+        <div class="work-body">
+          <div class="work-head">
+            <a class="work-title" href={p.href} target="_blank" rel="noopener">
+              {p.title}<span class="arrow" aria-hidden="true">↗</span>
+            </a>
+            <span class="mono muted year">{p.year}</span>
+          </div>
+          <p class="pitch muted">{p.pitch}</p>
+          <ul class="tags mono" aria-label="Tags">
+            {p.tags.map((t) => <li>{t}</li>)}
+          </ul>
+          {p.extra.length > 0 && (
+            <p class="extra">
+              {p.extra.map((l) => (
+                <a href={l.href} target="_blank" rel="noopener">{l.label} ↗</a>
+              ))}
+            </p>
+          )}
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+<style>
+  .work-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .work-row {
+    display: grid; grid-template-columns: 2.25rem 1fr; gap: 0.5rem; padding: 1rem 0.75rem;
+    margin-inline: -0.75rem; border-radius: 10px;
+    transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  }
+  .work-row:hover, .work-row:focus-within { background: var(--surface); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .num { font-size: 0.8125rem; padding-top: 0.2rem; }
+  .work-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .work-title { font-weight: 600; text-decoration: none; }
+  .arrow { display: inline-block; margin-left: 0.3rem; color: var(--muted); transition: transform 200ms ease; }
+  .work-row:hover .arrow, .work-title:focus-visible .arrow { transform: translate(2px, -2px); color: var(--accent); }
+  .year { font-size: 0.8125rem; }
+  .pitch { margin: 0.25rem 0 0.5rem; font-size: 0.9375rem; }
+  .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.375rem; padding: 0; margin: 0; font-size: 0.75rem; }
+  .tags li { border: 1px solid var(--line); border-radius: 999px; padding: 0.05rem 0.5rem; color: var(--muted); }
+  .extra { margin: 0.5rem 0 0; font-size: 0.875rem; }
+</style>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Work from '../components/Work.astro';
+import Experience from '../components/Experience.astro';
+import Stack from '../components/Stack.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import CommandPalette from '../islands/CommandPalette';
+import { profile, sections, links, projects } from '../data/site';
+const paletteLinks = [links.github, links.linkedin, links.resume, links.photography];
+const paletteProjects = projects.map((p) => ({ title: p.title, href: p.href }));
+---
+<Base>
+  <Hero />
+  <main id="main" tabindex="-1">
+    <Work />
+    <Experience />
+    <Stack />
+    <About />
+    <Contact />
+  </main>
+  <Footer />
+  <CommandPalette client:idle email={profile.email} sections={sections} links={paletteLinks} projects={paletteProjects} />
+</Base>
+<script>
+  import { initReveal } from '../scripts/reveal';
+  initReveal();
+</script>

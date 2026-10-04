@@ -15,7 +15,7 @@
 - Repo root: `~/Developer/achyuta0001.github.io` (already `git init`ed, branch `main`, spec committed).
 - `astro.config.mjs`: `site: 'https://achyuta0001.github.io'`, no `base`.
 - resume_master wins on any skill/role/number claim. Copy in `site.ts` is pinned by the spec — do not paraphrase.
-- Phone number `[redacted]` must not appear anywhere in `dist/` (HTML or PDF).
+- The owner's phone number must not appear anywhere in `dist/` (HTML or PDF).
 - Content readable without JS. Hidden-until-revealed state applies only under `html.js`.
 - All motion disabled under `prefers-reduced-motion: reduce`.
 - Text contrast ≥ 4.5:1, focus rings / UI borders ≥ 3:1, both themes.
@@ -728,7 +728,7 @@ test('contact links and photography link are correct', async ({ page }) => {
 
 test('phone number never appears', async ({ page }) => {
   await page.goto('/');
-  expect(await page.content()).not.toContain('[redacted]');
+  expect(await page.content()).not.toMatch(/\+91|\b\d{10}\b|\b\d{5}\s\d{5}\b/);
 });
 
 test('landmarks and skip link exist', async ({ page }) => {
@@ -1692,7 +1692,6 @@ Claude-Session: https://claude.ai/code/session_01Et8CSD7jnrTATJCsS9wWaH"
 ```ts
 import { test as base, expect } from '@playwright/test';
 import { test } from './fixtures';
-import { readFileSync } from 'node:fs';
 
 for (const path of ['/favicon.svg', '/apple-touch-icon.png', '/og.png', '/robots.txt', '/resume.pdf']) {
   test(`${path} is served`, async ({ request }) => {
@@ -1710,11 +1709,6 @@ test('og.png is 1200x630', async ({ page }) => {
   expect(size).toEqual([1200, 630]);
 });
 
-test('resume PDF does not contain the phone number', () => {
-  const pdf = readFileSync('dist/resume.pdf').toString('latin1');
-  expect(pdf).not.toContain('[redacted]');
-});
-
 base('unknown path serves 404 page linking home', async ({ page }) => {
   const res = await page.goto('/nope');
   expect(res?.status()).toBe(404);
@@ -1722,7 +1716,7 @@ base('unknown path serves 404 page linking home', async ({ page }) => {
 });
 ```
 
-Note: the PDF byte check is weak (text streams may be compressed). Step 6 verifies by reading the rendered PDF.
+Note: no byte-grep test on the PDF (streams are compressed, it can never fail). Step 6 verifies by reading the rendered PDF; the script guard checks the stripped markdown.
 
 - [ ] **Step 2: Run to verify failure**
 
@@ -1789,7 +1783,7 @@ OUT="$(cd "$(dirname "$0")/.." && pwd)/public/resume.pdf"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 sed -E 's/ ?\+91 ?[0-9 ]{10,12} ?·//' "$SRC/resume_master.md" > "$TMP/resume.md"
-if grep -q '[redacted]' "$TMP/resume.md"; then echo "phone still present" >&2; exit 1; fi
+if grep -q -E '\+91|[0-9]{10}|[0-9]{5} [0-9]{5}' "$TMP/resume.md"; then echo "phone still present" >&2; exit 1; fi
 cp "$SRC/resume.css" "$TMP/resume.css"
 (cd "$TMP" && npx --yes md-to-pdf resume.md --stylesheet resume.css \
   --pdf-options '{"format":"A4","margin":{"top":"12mm","bottom":"12mm","left":"10mm","right":"10mm"}}')
