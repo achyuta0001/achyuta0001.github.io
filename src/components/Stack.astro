@@ -30,8 +30,9 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   .tabs-ready .panel:focus-visible { outline-offset: 6px; }
 </style>
 <style is:global>
-  .tablist { position: relative; display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
-  .tab { background: none; border: 0; padding: 0.5rem 0.75rem; cursor: pointer; color: var(--muted); font-size: 0.8125rem; }
+  .tablist { position: relative; display: flex; gap: 0.25rem; margin-bottom: 1.25rem; box-shadow: inset 0 -1px 0 var(--line); overflow-x: auto; scrollbar-width: none; }
+  .tablist::-webkit-scrollbar { display: none; }
+  .tab { flex: none; background: none; border: 0; padding: 0.5rem 0.75rem; cursor: pointer; color: var(--muted); font-size: 0.8125rem; }
   .tab[aria-selected='true'] { color: var(--fg); }
-  .tab-indicator { position: absolute; left: 0; bottom: -1px; height: 2px; background: var(--accent); transition: transform 250ms ease, width 250ms ease; }
+  .tab-indicator { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--accent); transition: transform 250ms ease, width 250ms ease; }
 </style>
