@@ -6,4 +6,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://achyuta0001.github.io',
   integrations: [react(), sitemap()],
+  // The whole stylesheet is a few KB; inlining it saves two render-blocking requests.
+  build: { inlineStylesheets: 'always' },
 });
