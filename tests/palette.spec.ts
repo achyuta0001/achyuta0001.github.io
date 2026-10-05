@@ -4,7 +4,6 @@ const dialog = (page: import('@playwright/test').Page) => page.getByRole('dialog
 
 test('Control+K opens, Esc closes', async ({ page }) => {
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   await expect(dialog(page)).toBeVisible();
   await expect(page.getByRole('combobox')).toBeFocused();
@@ -15,7 +14,6 @@ test('Control+K opens, Esc closes', async ({ page }) => {
 
 test('trigger click opens and focus returns to trigger on close', async ({ page }) => {
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   const trigger = page.getByRole('button', { name: /command palette$/ });
   await trigger.click();
   await expect(dialog(page)).toBeVisible();
@@ -35,7 +33,6 @@ test('shortcut pressed before hydration is honoured', async ({ page }) => {
 
 test('navigate command scrolls to section and updates hash', async ({ page }) => {
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   await expect(page.getByRole('combobox')).toBeFocused();
   await page.keyboard.type('Contact');
@@ -47,7 +44,6 @@ test('navigate command scrolls to section and updates hash', async ({ page }) =>
 
 test('selected item has a visible non-colour-only indicator', async ({ page }) => {
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   const sel = page.locator('[cmdk-item][data-selected="true"]');
   await expect(sel).toBeVisible();
@@ -61,7 +57,6 @@ test('selected item has a visible non-colour-only indicator', async ({ page }) =
 test('copy email announces success', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   await page.getByRole('option', { name: 'Copy email' }).click();
   await expect(page.getByRole('status')).toHaveText('Copied');
@@ -75,7 +70,6 @@ test('copy email failure shows the address', async ({ page }) => {
     });
   });
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   await page.getByRole('option', { name: 'Copy email' }).click();
   await expect(page.getByRole('status')).toHaveText('Couldn’t copy — achyuta0001@gmail.com');
@@ -83,7 +77,6 @@ test('copy email failure shows the address', async ({ page }) => {
 
 test('toggle theme command cycles theme', async ({ page }) => {
   await page.goto('/');
-  await page.waitForFunction(() => window.__paletteReady === true);
   await page.keyboard.press('Control+k');
   await page.getByRole('option', { name: 'Toggle theme' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -99,4 +92,19 @@ test('trigger’s accessible name starts with its visible label', async ({ page 
   const trigger = page.locator('[data-palette-trigger]');
   const visible = (await trigger.locator('[data-kbd]').textContent())!.trim();
   await expect(trigger).toHaveAccessibleName(`${visible} command palette`);
+});
+
+test('React and the palette are not downloaded until the palette is wanted', async ({ page }) => {
+  let jsBytes = 0;
+  page.on('response', async (res) => {
+    if (res.url().endsWith('.js')) jsBytes += (await res.body()).length;
+  });
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  expect(jsBytes).toBeLessThan(20_000);
+  expect(await page.evaluate(() => window.__paletteReady)).toBeFalsy();
+
+  await page.keyboard.press('Control+k');
+  await expect(dialog(page)).toBeVisible();
+  await expect(page.getByRole('combobox')).toBeFocused();
 });

@@ -46,7 +46,7 @@ const og = new URL('/og.png', Astro.site).href;
         window.__paletteWanted = false;
         function want(detail) {
           if (window.__paletteReady) document.dispatchEvent(new CustomEvent('palette:open', { detail: detail }));
-          else window.__paletteWanted = true;
+          else { window.__paletteWanted = true; document.dispatchEvent(new CustomEvent('palette:want')); }
         }
         document.addEventListener('keydown', function (e) {
           if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); want(null); }
@@ -61,5 +61,15 @@ const og = new URL('/og.png', Astro.site).href;
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
+    <script is:inline>
+      // Sections already on screen show at first paint; only those below the fold fade in.
+      // Measuring forces a style pass, so suppress the transition for this one change.
+      document.querySelectorAll('[data-reveal]').forEach(function (el) {
+        if (el.getBoundingClientRect().top >= innerHeight) return;
+        el.style.transition = 'none';
+        el.classList.add('in');
+        requestAnimationFrame(function () { el.style.transition = ''; });
+      });
+    </script>
   </body>
 </html>
