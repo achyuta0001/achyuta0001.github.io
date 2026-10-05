@@ -61,5 +61,15 @@ const og = new URL('/og.png', Astro.site).href;
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
+    <script is:inline>
+      // Sections already on screen show at first paint; only those below the fold fade in.
+      // Measuring forces a style pass, so suppress the transition for this one change.
+      document.querySelectorAll('[data-reveal]').forEach(function (el) {
+        if (el.getBoundingClientRect().top >= innerHeight) return;
+        el.style.transition = 'none';
+        el.classList.add('in');
+        requestAnimationFrame(function () { el.style.transition = ''; });
+      });
+    </script>
   </body>
 </html>

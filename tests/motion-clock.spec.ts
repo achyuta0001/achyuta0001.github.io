@@ -41,3 +41,13 @@ test('footer clock shows IST time for a frozen instant', async ({ page }) => {
   await expect(page.locator('time[data-clock]')).toHaveText('14:00 IST');
   await expect(page.locator('[data-year]')).toHaveText('2026');
 });
+
+test('sections on screen at load appear without fading in', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const work = await page.locator('#work').evaluate((e) => ({
+    opacity: getComputedStyle(e).opacity,
+    running: e.getAnimations().length,
+  }));
+  expect(work).toEqual({ opacity: '1', running: 0 });
+  await expect(page.locator('#contact')).not.toHaveClass(/\bin\b/);
+});
