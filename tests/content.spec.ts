@@ -78,3 +78,22 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('[data-palette-trigger]')).toBeHidden();
   });
 });
+
+test('home page describes the owner as a schema.org Person', async ({ page }) => {
+  await page.goto('/');
+  const ld = JSON.parse(await page.locator('head script[type="application/ld+json"]').textContent() ?? '');
+  expect(ld).toMatchObject({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Achyuta K Upadya',
+    url: 'https://achyuta0001.github.io/',
+    jobTitle: 'Full-stack & platform engineer',
+    address: { addressLocality: 'Bengaluru', addressCountry: 'IN' },
+    worksFor: { name: 'HSBC Software Development' },
+  });
+  expect(ld.sameAs).toEqual([
+    'https://github.com/achyuta0001',
+    'https://linkedin.com/in/achyuta-k-upadya',
+    'https://achyuta0001.github.io/photography-portfolio/',
+  ]);
+});
