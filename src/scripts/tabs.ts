@@ -38,6 +38,14 @@ export function initTabs(root: HTMLElement): void {
     indicator.style.width = `${t.offsetWidth}px`;
     indicator.style.transform = `translateX(${t.offsetLeft}px)`;
   };
+  // On narrow screens the row scrolls sideways; keep the selected tab in view
+  // without scrolling the page itself.
+  const reveal = (t: HTMLElement) => {
+    const left = t.offsetLeft;
+    const right = left + t.offsetWidth;
+    if (left < list.scrollLeft) list.scrollLeft = left;
+    else if (right > list.scrollLeft + list.clientWidth) list.scrollLeft = right - list.clientWidth;
+  };
   const select = (i: number, focus = false) => {
     current = i;
     tabs.forEach((t, j) => {
@@ -48,6 +56,7 @@ export function initTabs(root: HTMLElement): void {
     });
     place();
     if (focus) tabs[i].focus();
+    reveal(tabs[i]);
   };
 
   tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));

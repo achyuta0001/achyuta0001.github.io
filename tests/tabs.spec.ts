@@ -48,3 +48,28 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('#stack').getByText('Kubernetes', { exact: true })).toBeVisible();
   });
 });
+
+test.describe('narrow phone', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+  test('tabs stay on one row and the indicator sits under the selected tab', async ({ page }) => {
+    await page.goto('/#stack');
+    const tabs = page.getByRole('tablist', { name: 'Stack groups' }).getByRole('tab');
+    const tops = await tabs.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+    expect(new Set(tops).size).toBe(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+
+    for (const i of [4, 0]) {
+      await tabs.nth(i).click();
+      await expect(async () => {
+        const tab = await tabs.nth(i).boundingBox();
+        const bar = await page.locator('.tab-indicator').boundingBox();
+        expect(tab && bar).toBeTruthy();
+        expect(Math.abs(bar!.x - tab!.x)).toBeLessThan(1);
+        expect(Math.abs(bar!.width - tab!.width)).toBeLessThan(1);
+        expect(Math.abs(bar!.y + bar!.height - (tab!.y + tab!.height))).toBeLessThan(2);
+        expect(tab!.x).toBeGreaterThanOrEqual(0);
+        expect(tab!.x + tab!.width).toBeLessThanOrEqual(360);
+      }).toPass();
+    }
+  });
+});

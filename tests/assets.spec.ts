@@ -22,3 +22,12 @@ base('unknown path serves 404 page linking home', async ({ page }) => {
   expect(res?.status()).toBe(404);
   await expect(page.getByRole('link', { name: /home/i })).toHaveAttribute('href', '/');
 });
+
+test('sitemap lists the home page only and robots.txt points to it', async ({ request }) => {
+  const index = await request.get('/sitemap-index.xml');
+  expect(index.status()).toBe(200);
+  expect(await index.text()).toContain('https://achyuta0001.github.io/sitemap-0.xml');
+  const urls = [...(await (await request.get('/sitemap-0.xml')).text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  expect(urls).toEqual(['https://achyuta0001.github.io/']);
+  expect(await (await request.get('/robots.txt')).text()).toContain('Sitemap: https://achyuta0001.github.io/sitemap-index.xml');
+});

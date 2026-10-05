@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://achyuta0001.github.io/sitemap-index.xml

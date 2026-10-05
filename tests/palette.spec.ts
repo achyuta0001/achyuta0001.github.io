@@ -16,7 +16,7 @@ test('Control+K opens, Esc closes', async ({ page }) => {
 test('trigger click opens and focus returns to trigger on close', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => window.__paletteReady === true);
-  const trigger = page.getByRole('button', { name: 'Open command palette' });
+  const trigger = page.getByRole('button', { name: /command palette$/ });
   await trigger.click();
   await expect(dialog(page)).toBeVisible();
   await page.keyboard.press('Escape');
@@ -92,4 +92,11 @@ test('toggle theme command cycles theme', async ({ page }) => {
 test('trigger label is platform-appropriate', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-kbd]')).toHaveText(/^(⌘K|Ctrl K|Menu)$/);
+});
+
+test('trigger’s accessible name starts with its visible label', async ({ page }) => {
+  await page.goto('/');
+  const trigger = page.locator('[data-palette-trigger]');
+  const visible = (await trigger.locator('[data-kbd]').textContent())!.trim();
+  await expect(trigger).toHaveAccessibleName(`${visible} command palette`);
 });

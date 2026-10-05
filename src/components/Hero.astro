@@ -5,8 +5,8 @@ import { profile } from '../data/site';
   <h1>{profile.name}</h1>
   <p class="hero-role">{profile.role} in {profile.location}.</p>
   <p class="hero-tagline muted">{profile.tagline}</p>
-  <button type="button" class="palette-trigger mono" data-palette-trigger aria-label="Open command palette">
-    <kbd data-kbd>⌘K</kbd>
+  <button type="button" class="palette-trigger mono" data-palette-trigger>
+    <kbd data-kbd>⌘K</kbd><span class="visually-hidden"> command palette</span>
   </button>
 </header>
 <script is:inline>
