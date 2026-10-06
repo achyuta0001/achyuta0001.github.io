@@ -97,3 +97,32 @@ test('home page describes the owner as a schema.org Person', async ({ page }) =>
     'https://achyuta0001.github.io/photography-portfolio/',
   ]);
 });
+
+test('tripwyre and ashlar show real terminal captures; other projects stay text-only', async ({ page }) => {
+  await page.goto('/');
+  const rows = page.locator('#work li.work-row');
+  for (const [i, alt, loading] of [
+    [1, /ashlar log.*simulate a crash/, 'eager'],
+    [2, /tripwyre scan on a sample project/, 'lazy'],
+  ] as const) {
+    const img = rows.nth(i).getByRole('img', { name: alt });
+    await img.scrollIntoViewIfNeeded();
+    await expect(img).toHaveAttribute('loading', loading);
+    await expect(img).toHaveAttribute('width', /\d+/);
+    await expect(img).toHaveAttribute('height', /\d+/);
+    await expect.poll(() => img.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth)).toBeGreaterThan(0);
+    const box = (await img.boundingBox())!;
+    const row = (await rows.nth(i).locator('.work-body').boundingBox())!;
+    expect(box.width).toBeLessThanOrEqual(row.width + 0.5);
+  }
+  for (const i of [0, 3, 4, 5]) await expect(rows.nth(i).locator('img')).toHaveCount(0);
+});
+
+test.describe('narrow phone work images', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+  test('captures fit the column without horizontal scroll', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#work img').first().scrollIntoViewIfNeeded();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  });
+});
