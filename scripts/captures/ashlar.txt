@@ -1,0 +1,18 @@
+$ ashlar append -dir orders "1041 placed" "1041 paid" "1042 placed" "1042 paid"
+0
+1
+2
+3
+# the machine dies mid-write: the last record is cut short
+$ truncate -s 67 orders/00000000000000000000.store
+$ ashlar cat -dir orders
+0	1041 placed
+1	1041 paid
+2	1042 placed
+$ ashlar append -dir orders "1042 paid"
+3
+$ ashlar cat -dir orders
+0	1041 placed
+1	1041 paid
+2	1042 placed
+3	1042 paid
