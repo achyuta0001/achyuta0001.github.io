@@ -1,0 +1,16 @@
+$ tripwyre scan
+tripwyre — 13 findings (4 critical, 4 warning, 5 info)
+
+CRITICAL   [deps]  body-parser 1.19.0 — 2 CVEs (1 high, 1 low)
+CRITICAL   [deps]  lodash 4.17.20 — 5 CVEs (2 high, 3 moderate)
+CRITICAL   [deps]  path-to-regexp 0.1.7 — 3 CVEs (3 high)
+CRITICAL   [deps]  qs 6.7.0 — 4 CVEs (1 high, 2 moderate, 1 low)
+WARNING    [deps]  express 4.17.1 — 2 CVEs (1 moderate, 1 low)
+WARNING    [config]  CACHE_TTL missing in config/prod.toml, present in expected
+WARNING    [config]  DB_POOL_SIZE drifted in config/prod.toml (expected: 10, observed: 3)
+WARNING    [logs]  error spike in logs/app.log — 87 errors between 03:00–03:15 UTC
+INFO       [deps]  cookie 0.4.0 — 1 CVEs (1 low)
+INFO       [deps]  send 0.17.1 — 1 CVEs (1 low)
+INFO       [deps]  serve-static 1.14.1 — 1 CVEs (1 low)
+INFO       [config]  FEATURE_NEW_CHECKOUT present in config/prod.toml, not in expected
+INFO       [logs]  recurring error in logs/app.log — 87× "payment-gateway timeout after #ms order=#"

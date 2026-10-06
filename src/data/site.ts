@@ -1,3 +1,7 @@
+import type { ImageMetadata } from 'astro';
+import tripwyreShot from '../assets/work/tripwyre.png';
+import ashlarShot from '../assets/work/ashlar.png';
+
 export type Link = { label: string; href: string };
 export type Project = {
   title: string;
@@ -6,6 +10,7 @@ export type Project = {
   year: number;
   href: string;
   extra: Link[];
+  image?: { src: ImageMetadata; alt: string };
 };
 export type Role = { title: string; team: string; period: string; stack: string; bullets: string[] };
 export type StackGroup = { name: string; items: string[] };
@@ -70,6 +75,10 @@ export const projects: Project[] = [
     year: 2026,
     href: `${GH}/ashlar`,
     extra: [],
+    image: {
+      src: ashlarShot,
+      alt: 'Terminal session: four records are appended to an ashlar log, the store file is truncated mid-record to simulate a crash, and on reopening the three intact records survive and the next append reuses offset 3.',
+    },
   },
   {
     title: 'tripwyre',
@@ -79,6 +88,10 @@ export const projects: Project[] = [
     year: 2026,
     href: `${GH}/tripwyre`,
     extra: [],
+    image: {
+      src: tripwyreShot,
+      alt: 'Terminal output of tripwyre scan on a sample project: 13 findings, led by critical CVEs in lodash, qs, path-to-regexp and body-parser, then config drift in DB_POOL_SIZE and an error spike of 87 payment-gateway timeouts in the logs.',
+    },
   },
   {
     title: 'hive',
