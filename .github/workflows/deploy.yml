@@ -4,11 +4,19 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Daily rebuild at 06:00 IST so each project's "updated" date stays current.
+  schedule:
+    - cron: '30 0 * * *'
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+# The build reads public repo metadata from the GitHub API; the token lifts the
+# unauthenticated rate limit.
+env:
+  GITHUB_TOKEN: ${{ github.token }}
 
 concurrency:
   group: pages
