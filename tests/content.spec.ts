@@ -126,3 +126,15 @@ test.describe('narrow phone work images', () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
   });
 });
+
+test('project activity, when GitHub was reachable at build, is a dated "updated" line', async ({ page }) => {
+  await page.goto('/');
+  const lines = page.locator('#work .activity');
+  for (const line of await lines.all()) {
+    const time = line.locator('time');
+    await expect(time).toHaveText(/^updated \d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)( \d{4})?$/);
+    const iso = await time.getAttribute('datetime');
+    expect(Number.isNaN(Date.parse(iso!))).toBe(false);
+  }
+  expect(await lines.count()).toBeLessThanOrEqual(6);
+});
