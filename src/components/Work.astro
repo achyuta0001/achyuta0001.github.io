@@ -1,10 +1,12 @@
 ---
 import { Image } from 'astro:assets';
 import { projects } from '../data/site';
+import { activityFor, formatUpdated } from '../data/github';
 const pad = (n: number) => String(n).padStart(2, '0');
 // The first capture sits in the opening viewport on desktop, where it is the
 // largest paint; lazy-loading it would delay LCP. The rest load on scroll.
 const firstShot = projects.findIndex((p) => p.image);
+const activity = await activityFor(projects.map((p) => p.href));
 ---
 <section id="work" class="section" data-reveal tabindex="-1" aria-labelledby="work-h">
   <h2 id="work-h">Selected work</h2>
@@ -31,9 +33,17 @@ const firstShot = projects.findIndex((p) => p.image);
               decoding="async"
             />
           )}
-          <ul class="tags mono" aria-label="Tags">
-            {p.tags.map((t) => <li>{t}</li>)}
-          </ul>
+          <div class="meta">
+            <ul class="tags mono" aria-label="Tags">
+              {p.tags.map((t) => <li>{t}</li>)}
+            </ul>
+            {activity[i] && (
+              <p class="activity mono muted">
+                <time datetime={activity[i].pushedAt.toISOString()}>{formatUpdated(activity[i].pushedAt)}</time>
+                {activity[i].stars > 0 && <span> · <span aria-hidden="true">★</span> {activity[i].stars}<span class="visually-hidden"> stars</span></span>}
+              </p>
+            )}
+          </div>
           {p.extra.length > 0 && (
             <p class="extra">
               {p.extra.map((l) => (
@@ -64,5 +74,7 @@ const firstShot = projects.findIndex((p) => p.image);
   .tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.375rem; padding: 0; margin: 0; font-size: 0.75rem; }
   .tags li { border: 1px solid var(--line); border-radius: 999px; padding: 0.05rem 0.5rem; color: var(--muted); }
   .extra { margin: 0.5rem 0 0; font-size: 0.875rem; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.375rem 1rem; }
+  .activity { margin: 0; font-size: 0.75rem; }
   .shot { display: block; width: 100%; height: auto; margin: 0.25rem 0 0.75rem; border-radius: 10px; }
 </style>
