@@ -1,0 +1,39 @@
+/* Long-form posts. Global h2 is the small mono section label; inside a post
+   headings go back to ordinary reading headings. */
+.prose { font-size: 1.0625rem; line-height: 1.7; }
+.prose h1 { font-size: 1.75rem; line-height: 1.25; margin: 2.5rem 0 0.5rem; }
+.prose .byline { font-size: 0.8125rem; margin: 0 0 2.5rem; }
+.prose h2 {
+  font: 600 1.25rem/1.3 var(--sans); color: var(--fg); text-transform: none; letter-spacing: -0.01em;
+  margin: 2.75rem 0 0.75rem;
+}
+.prose h3 { font-size: 1.0625rem; margin: 2rem 0 0.5rem; }
+.prose p, .prose ul, .prose ol, .prose table, .prose pre, .prose img { margin-block: 0 1.25rem; }
+.prose ul, .prose ol { padding-left: 1.25rem; }
+.prose li + li { margin-top: 0.35rem; }
+.prose a { text-decoration-color: var(--muted); }
+.prose img { display: block; max-width: 100%; height: auto; border-radius: 10px; }
+.prose :not(pre) > code {
+  font: 0.875em var(--mono); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 5px; padding: 0.05em 0.35em;
+}
+.prose pre {
+  font: 0.8125rem/1.6 var(--mono); padding: 1rem 1.125rem; border-radius: 10px;
+  border: 1px solid var(--line); overflow-x: auto;
+}
+.prose table { border-collapse: collapse; width: 100%; font-size: 0.9375rem; }
+.prose th, .prose td { text-align: left; padding: 0.45rem 0.75rem 0.45rem 0; border-bottom: 1px solid var(--line); }
+.prose th { font-weight: 600; }
+.prose td[align='right'], .prose th[align='right'] { text-align: right; padding-right: 0; }
+
+/* Shiki renders light colours inline and dark ones as --shiki-dark variables. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .astro-code,
+  :root:not([data-theme='light']) .astro-code span {
+    color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+  }
+}
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+}

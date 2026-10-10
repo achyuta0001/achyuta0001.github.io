@@ -8,4 +8,5 @@ export default defineConfig({
   integrations: [react(), sitemap()],
   // The whole stylesheet is a few KB; inlining it saves two render-blocking requests.
   build: { inlineStylesheets: 'always' },
+  markdown: { shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } } },
 });

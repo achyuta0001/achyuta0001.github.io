@@ -3,8 +3,8 @@ import { test, expect } from './fixtures';
 test('all sections render with headings in order', async ({ page }) => {
   await page.goto('/');
   const ids = await page.locator('main > section[id]').evaluateAll((els) => els.map((e) => e.id));
-  expect(ids).toEqual(['work', 'experience', 'stack', 'about', 'contact']);
-  for (const name of ['Selected work', 'Experience', 'Stack', 'About', 'Let’s work together']) {
+  expect(ids).toEqual(['work', 'experience', 'stack', 'writing', 'about', 'contact']);
+  for (const name of ['Selected work', 'Experience', 'Stack', 'Writing', 'About', 'Let’s work together']) {
     await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
   }
 });
@@ -69,7 +69,7 @@ test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false });
   test('every section is visible', async ({ page }) => {
     await page.goto('/');
-    for (const id of ['work', 'experience', 'stack', 'about', 'contact']) {
+    for (const id of ['work', 'experience', 'stack', 'writing', 'about', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
       await expect(page.locator(`#${id}`)).toBeVisible();
       expect(await page.locator(`#${id}`).evaluate((e) => getComputedStyle(e).opacity)).toBe('1');

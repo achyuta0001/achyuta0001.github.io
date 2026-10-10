@@ -15,7 +15,7 @@ export type Project = {
 export type Role = { title: string; team: string; period: string; stack: string; bullets: string[] };
 export type StackGroup = { name: string; items: string[] };
 export type Section = {
-  id: 'work' | 'experience' | 'stack' | 'about' | 'contact';
+  id: 'work' | 'experience' | 'stack' | 'writing' | 'about' | 'contact';
   label: string;
 };
 
@@ -53,6 +53,7 @@ export const sections: Section[] = [
   { id: 'work', label: 'Work' },
   { id: 'experience', label: 'Experience' },
   { id: 'stack', label: 'Stack' },
+  { id: 'writing', label: 'Writing' },
   { id: 'about', label: 'About' },
   { id: 'contact', label: 'Contact' },
 ];
