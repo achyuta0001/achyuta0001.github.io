@@ -1,0 +1,28 @@
+# Everything listed here is never sent to the build, which keeps it fast and
+# stops local junk (or secrets) from ending up in an image layer.
+
+# Built or installed inside the image instead
+node_modules
+dist
+.astro
+
+# Git metadata and editor/OS files
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+# Tests aren't needed to build or serve the site
+tests
+test-results
+playwright-report
+playwright.config.ts
+
+# Never bake secrets into an image
+.env
+.env.*
+
+# Container files themselves
+Dockerfile
+.dockerignore
