@@ -97,24 +97,31 @@ test('home page describes the owner as a schema.org Person', async ({ page }) =>
   ]);
 });
 
-test('tripwyre and ashlar show real terminal captures; other projects stay text-only', async ({ page }) => {
+test('hero shows the ashlar session as text; tripwyre keeps its capture; other projects stay text-only', async ({ page }) => {
   await page.goto('/');
+  const term = page.locator('header pre.term-body');
+  await expect(term).toHaveAccessibleName(/store file is cut mid-record/);
+  await expect(term).toContainText('the machine dies mid-write');
   const rows = page.locator('#work li.work-row');
-  for (const [i, alt, loading] of [
-    [1, /ashlar log.*simulate a crash/, 'eager'],
-    [2, /tripwyre scan on a sample project/, 'lazy'],
-  ] as const) {
-    const img = rows.nth(i).getByRole('img', { name: alt });
-    await img.scrollIntoViewIfNeeded();
-    await expect(img).toHaveAttribute('loading', loading);
-    await expect(img).toHaveAttribute('width', /\d+/);
-    await expect(img).toHaveAttribute('height', /\d+/);
-    await expect.poll(() => img.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth)).toBeGreaterThan(0);
-    const box = (await img.boundingBox())!;
-    const row = (await rows.nth(i).locator('.work-body').boundingBox())!;
-    expect(box.width).toBeLessThanOrEqual(row.width + 0.5);
-  }
-  for (const i of [0, 3, 4, 5]) await expect(rows.nth(i).locator('img')).toHaveCount(0);
+  const img = rows.nth(2).getByRole('img', { name: /tripwyre scan on a sample project/ });
+  await img.scrollIntoViewIfNeeded();
+  await expect(img).toHaveAttribute('width', /\d+/);
+  await expect(img).toHaveAttribute('height', /\d+/);
+  await expect.poll(() => img.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth)).toBeGreaterThan(0);
+  const box = (await img.boundingBox())!;
+  const row = (await rows.nth(2).locator('.work-body').boundingBox())!;
+  expect(box.width).toBeLessThanOrEqual(row.width + 0.5);
+  for (const i of [0, 1, 3, 4, 5]) await expect(rows.nth(i).locator('img')).toHaveCount(0);
+});
+
+test('hero figures are backed by the page', async ({ page }) => {
+  await page.goto('/');
+  const stats = page.locator('.stats dd');
+  await expect(stats).toHaveText(['42', '40+', '~4 wk', '6']);
+  await expect(page.locator('#experience')).toContainText('(42 services)');
+  await expect(page.locator('#experience')).toContainText('40+ microservice');
+  await expect(page.locator('#experience')).toContainText('~4 weeks');
+  await expect(page.locator('#work li.work-row')).toHaveCount(6);
 });
 
 test.describe('narrow phone work images', () => {

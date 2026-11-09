@@ -1,6 +1,5 @@
 import type { ImageMetadata } from 'astro';
 import tripwyreShot from '../assets/work/tripwyre.png';
-import ashlarShot from '../assets/work/ashlar.png';
 
 export type Link = { label: string; href: string };
 export type Project = {
@@ -76,10 +75,6 @@ export const projects: Project[] = [
     year: 2026,
     href: `${GH}/ashlar`,
     extra: [],
-    image: {
-      src: ashlarShot,
-      alt: 'Terminal session: four records are appended to an ashlar log, the store file is truncated mid-record to simulate a crash, and on reopening the three intact records survive and the next append reuses offset 3.',
-    },
   },
   {
     title: 'tripwyre',
@@ -158,4 +153,12 @@ export const stack: StackGroup[] = [
   { name: 'Frontend', items: ['React', 'SwiftUI / SwiftData'] },
   { name: 'Infra', items: ['Kubernetes', 'Helm', 'Docker', 'Jenkins', 'NGINX Plus', 'HashiCorp Vault', 'GCP'] },
   { name: 'Data', items: ['PostgreSQL', 'GCP Cloud SQL', 'Liquibase', 'Amazon S3'] },
+];
+
+// Hero figures. Each one is stated elsewhere on the page (experience bullets, work list).
+export const heroStats: { value: string; label: string }[] = [
+  { value: '42', label: 'services moved onto Helm and Kubernetes' },
+  { value: '40+', label: 'microservices on pipelines I run' },
+  { value: '~4 wk', label: 'JWT proxy, design to production' },
+  { value: String(projects.length), label: 'open-source tools, standard library first' },
 ];

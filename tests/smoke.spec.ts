@@ -26,3 +26,13 @@ test('section index lines number the sections and stay out of the accessibility 
   await expect(idx.last()).toContainText('[06/06]');
 });
 
+test.describe('narrow phone hero', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+  test('display word fits and does not sit on the name', async ({ page }) => {
+    await page.goto('/');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+    const word = (await page.locator('.display').boundingBox())!;
+    const hello = (await page.locator('.hello').boundingBox())!;
+    expect(hello.y).toBeGreaterThanOrEqual(word.y + word.height - 1);
+  });
+});
