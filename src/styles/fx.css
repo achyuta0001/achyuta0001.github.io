@@ -1,0 +1,63 @@
+/* Annotation layer (see scripts/fx.ts). Cyan is reserved for it. */
+.fx-layer { pointer-events: none; }
+
+.fx-boot {
+  position: fixed; inset: 0; z-index: 40;
+  background-color: #000;
+  background-image:
+    linear-gradient(rgb(69 200 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(69 200 255 / 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  transition: opacity 450ms ease, background-color 600ms ease;
+}
+/* Swarm phase is pure black; once the cursors start building, the page shows through. */
+.fx-boot:not(.build) { background-image: none; }
+.fx-boot.build { background-color: rgb(2 8 14 / 0.8); }
+
+.fx-core {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border: 1px solid #2a2a2a; border-radius: 10px; background: #0e0e0e;
+  font: 500 10px/1 var(--mono); color: #6b6b6b;
+  transition: opacity 300ms ease;
+}
+.fx-boot.build .fx-core { opacity: 0; }
+.fx-bot { position: absolute; left: 0; top: 0; will-change: transform; transition: opacity 250ms ease; }
+.fx-bot svg { display: block; filter: drop-shadow(0 0 4px rgb(255 255 255 / 0.15)); }
+.fx-bot.gone { opacity: 0; }
+.fx-plus {
+  position: absolute; width: 11px; height: 11px; margin: -5px 0 0 -5px;
+  background:
+    linear-gradient(var(--cyan), var(--cyan)) center / 1px 100% no-repeat,
+    linear-gradient(var(--cyan), var(--cyan)) center / 100% 1px no-repeat;
+  animation: fx-pop 300ms ease-out both;
+}
+@keyframes fx-pop { from { transform: scale(0); } }
+.fx-boot.out { opacity: 0; }
+.fx-status {
+  position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); margin: 0;
+  font: 400 0.75rem/1 var(--mono); color: var(--cyan);
+}
+
+.fx-box, .fx-anno {
+  position: absolute; border: 1px solid var(--cyan);
+  background: rgb(69 200 255 / 0.06);
+}
+.fx-box .fx-tag, .fx-box .fx-h { opacity: 0; transition: opacity 150ms ease; }
+.fx-box.done .fx-tag, .fx-box.done .fx-h { opacity: 1; }
+.fx-anno {
+  inset: -10px -14px; width: auto !important; height: auto !important;
+  animation: fx-draw 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both, fx-anno-out 600ms ease 1700ms forwards;
+}
+@keyframes fx-draw { from { clip-path: inset(-30px 100% 100% -10px); opacity: 0.2; } to { clip-path: inset(-30px -600px -10px -10px); opacity: 1; } }
+@keyframes fx-anno-out { to { opacity: 0; } }
+
+.fx-tag {
+  position: absolute; left: -1px; bottom: 100%; margin-bottom: 4px; padding: 2px 6px; white-space: pre;
+  font: 400 10px/1.3 var(--mono); font-stretch: normal; letter-spacing: 0; text-transform: none;
+  background: var(--cyan); color: #00121a;
+}
+.fx-tag.inside { bottom: auto; top: 3px; left: 3px; margin: 0; }
+.fx-h { position: absolute; width: 7px; height: 7px; background: #000; border: 1px solid var(--cyan); }
+.fx-h.tl { left: -4px; top: -4px; } .fx-h.tr { right: -4px; top: -4px; }
+.fx-h.bl { left: -4px; bottom: -4px; } .fx-h.br { right: -4px; bottom: -4px; }

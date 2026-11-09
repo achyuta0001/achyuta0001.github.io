@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import '../styles/fx.css';
 import Hero from '../components/Hero.astro';
 import Work from '../components/Work.astro';
 import Experience from '../components/Experience.astro';
@@ -37,6 +38,8 @@ const person = {
 <script>
   import { initReveal } from '../scripts/reveal';
   import { initPaletteLoader } from '../scripts/palette-loader';
+  import { initFx } from '../scripts/fx';
   initReveal();
   initPaletteLoader();
+  initFx();
 </script>
