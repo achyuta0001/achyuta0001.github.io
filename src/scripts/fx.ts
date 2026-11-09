@@ -1,5 +1,6 @@
-// The annotation layer: a cursor swarm that wireframes the hero on first load, and
-// design-tool selection boxes on section headings as they scroll in. Everything here is decoration: aria-hidden, pointer-events: none,
+// The annotation layer: a cursor swarm that wireframes the hero on first load, design-tool
+// selection boxes on section headings as they scroll in, and a few drifting
+// cursors. Everything here is decoration: aria-hidden, pointer-events: none,
 // skipped entirely for reduced motion, and the page reads the same without it.
 
 const BOOT_KEY = 'fx:booted';
@@ -218,8 +219,187 @@ function annotate(): void {
   heads.forEach((h) => io.observe(h));
 }
 
+type Cursor = {
+  el: HTMLElement;
+  slot: number; // index into a LABELS entry, or -1 for an unnamed cursor
+  region: string;
+  w: number; // footprint width: arrow plus name tag
+  x: number; y: number; // page coordinates, so cursors scroll with the content
+  from: [number, number]; to: [number, number]; bend: [number, number];
+  t0: number; dur: number; rest: number;
+};
+
+const CURSORS = [
+  { named: true, color: 'var(--cyan)' },
+  { named: true, color: '#ffd23f' },
+  { named: true, color: '#b48cff' },
+  { named: false, color: '#ff8ad8' },
+  { named: false, color: '#7dffb2' },
+];
+
+// What the named cursors are called depends on the part of the page they are
+// in, so the cast changes as you scroll. One name per named cursor, in order.
+const LABELS: Record<string, [string, string, string]> = {
+  hero: ['deploy', 'review', 'on-call'],
+  work: ['go test -fuzz', 'code review', 'release'],
+  experience: ['helm upgrade', 'jenkins', 'vault'],
+  stack: ['kubectl', 'spring boot', 'swiftui'],
+  writing: ['fsync', 'crc32c', 'reader'],
+  about: ['tinkering', 'stdlib only', 'camera'],
+  contact: ['recruiter', 'hiring manager', 'say hi'],
+};
+const LONGEST = Math.max(...Object.values(LABELS).flat().map((l) => l.length));
+
+function regionAt(pageY: number): string {
+  const y = pageY - scrollY;
+  for (const el of document.querySelectorAll<HTMLElement>('.hero, main > section[id]')) {
+    const r = el.getBoundingClientRect();
+    if (y >= r.top && y < r.bottom) return el.id || 'hero';
+  }
+  return 'hero';
+}
+
+// Where a cursor may rest: just past the end of a heading or title, or just
+// under a block's bottom edge, pointing at it. Never on top of text.
+const BESIDE = '.section h2, .work-title, .post-title, .email, .hero h1 span, .employer h3, .role h4';
+const BELOW = '.hero .btn, .stat, .term, .shot, .chips li';
+// Anything a resting cursor must not cover.
+const TEXT = 'main p, main li, main h2, main h3, main h4, main a, main img, main dd, main dt, .hero p, .hero h1, .hero a, .hero pre, .hero dd, .hero dt, .topbar';
+
+const FOOT_H = 24;
+const GAP = 140; // keep resting cursors at least this far apart
+
+type Rect = { l: number; t: number; r: number; b: number };
+const hits = (a: Rect, b: Rect) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+
+function spots(): [number, number][] {
+  const sx = scrollX;
+  const sy = scrollY;
+  const out: [number, number][] = [];
+  const inView = (r: DOMRect) => r.width > 0 && r.top > 60 && r.bottom < innerHeight - 80;
+  for (const el of document.querySelectorAll<HTMLElement>(BESIDE)) {
+    const r = el.getBoundingClientRect();
+    if (inView(r)) out.push([r.right + 10 + sx, r.top + r.height * 0.45 + sy]);
+  }
+  for (const el of document.querySelectorAll<HTMLElement>(BELOW)) {
+    const r = el.getBoundingClientRect();
+    if (inView(r)) out.push([r.left + r.width * (0.3 + Math.random() * 0.4) + sx, r.bottom + 6 + sy]);
+  }
+  // The side gutters on wide screens are always free.
+  const main = document.querySelector('main .section')?.getBoundingClientRect();
+  if (main) {
+    const pad = 24;
+    for (const [lo, hi] of [[pad, main.left - 90], [main.right + pad, innerWidth - 90]]) {
+      if (hi - lo > 20) out.push([lo + Math.random() * (hi - lo) + sx, 120 + Math.random() * (innerHeight - 240) + sy]);
+    }
+  }
+  return out;
+}
+
+function pickSpot(self: Cursor, all: Cursor[]): [number, number] | null {
+  const sx = scrollX;
+  const sy = scrollY;
+  const text: Rect[] = [];
+  for (const el of document.querySelectorAll<HTMLElement>(TEXT)) {
+    const r = el.getBoundingClientRect();
+    if (r.width > 0 && r.bottom > 0 && r.top < innerHeight) text.push({ l: r.left + sx, t: r.top + sy, r: r.right + sx, b: r.bottom + sy });
+  }
+  const docH = document.documentElement.scrollHeight;
+  const ok = spots().filter(([x, y]) => {
+    const foot = { l: x - 2, t: y - 2, r: x + self.w, b: y + FOOT_H };
+    if (foot.r > sx + innerWidth - 8 || foot.b > docH - 8) return false;
+    if (text.some((t) => hits(foot, t))) return false;
+    return all.every((o) => o === self || Math.hypot(o.to[0] - x, o.to[1] - y) > GAP);
+  });
+  return ok.length ? ok[Math.floor(Math.random() * ok.length)] : null;
+}
+
+function cursors(): void {
+  if (!matchMedia('(pointer: fine)').matches || innerWidth < 900) return;
+  const layer = document.createElement('div');
+  layer.className = 'fx-layer fx-cursors';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.append(layer);
+
+  const now = performance.now();
+  const list: Cursor[] = CURSORS.map((c, i) => {
+    const el = document.createElement('div');
+    el.className = 'fx-cursor';
+    el.style.setProperty('--c', c.color);
+    el.innerHTML = `<svg width="16" height="18" viewBox="0 0 16 18"><path d="M1 1l13 7.2-5.8 1.4L5.4 16z" fill="var(--c)" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/></svg>${c.named ? '<span></span>' : ''}`;
+    layer.append(el);
+    // Start just off the right edge; each one walks in on its first move.
+    const p: [number, number] = [scrollX + innerWidth + 30, scrollY + innerHeight * (0.2 + i * 0.15)];
+    // Footprint is sized for the longest name any section uses, so a rename never lands on text.
+    return { el, slot: c.named ? i : -1, region: '', w: c.named ? 16 + LONGEST * 6.6 + 16 : 18, x: p[0], y: p[1], from: p, to: p, bend: [0, 0], t0: now, dur: 1, rest: 300 + i * 700 };
+  });
+  const rename = (c: Cursor, region: string) => {
+    if (c.slot < 0 || c.region === region) return;
+    c.region = region;
+    const span = c.el.querySelector('span')!;
+    span.textContent = (LABELS[region] ?? LABELS.hero)[c.slot];
+    span.classList.remove('swap');
+    void span.offsetWidth; // restart the swap animation
+    span.classList.add('swap');
+    c.el.dataset.region = region;
+  };
+  for (const c of list) rename(c, 'hero');
+
+  // A cursor resting near the visitor's own pointer gets out of the way.
+  let mouse: [number, number] = [-1e4, -1e4];
+  addEventListener('pointermove', (e) => { mouse = [e.pageX, e.pageY]; }, { passive: true });
+
+  let running = false;
+  const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const frame = (t: number) => {
+    for (const c of list) {
+      const p = Math.min(1, (t - c.t0) / c.dur);
+      const resting = p >= 1;
+      const crowded = resting && Math.hypot(mouse[0] - c.x, mouse[1] - c.y) < 90;
+      // Left behind by a scroll: catch up soon rather than after the full rest.
+      const behind = resting && (c.y < scrollY || c.y > scrollY + innerHeight) && t - c.t0 > c.dur + 1200;
+      if (resting && (crowded || behind || t - c.t0 > c.dur + c.rest)) {
+        const to = pickSpot(c, list);
+        if (!to) { c.rest += 600; continue; }
+        // A cursor left far off-screen re-enters from the nearest edge instead of crossing the page.
+        const top = scrollY - 30;
+        const bottom = scrollY + innerHeight + 30;
+        c.from = [c.x, Math.min(bottom, Math.max(top, c.y))];
+        c.to = to;
+        const dx = to[0] - c.from[0];
+        const dy = to[1] - c.from[1];
+        const k = (Math.random() - 0.5) * 0.4;
+        c.bend = [-dy * k, dx * k];
+        c.t0 = t;
+        c.dur = Math.min(1800, 700 + Math.hypot(dx, dy) * 1.4);
+        c.rest = 1800 + Math.random() * 3200;
+        c.el.dataset.state = 'move';
+        rename(c, regionAt(to[1]));
+        continue;
+      }
+      const e = ease(p);
+      // Quadratic curve through a bent midpoint, so paths arc like a hand on a trackpad.
+      const mx = (c.from[0] + c.to[0]) / 2 + c.bend[0];
+      const my = (c.from[1] + c.to[1]) / 2 + c.bend[1];
+      c.x = (1 - e) * (1 - e) * c.from[0] + 2 * (1 - e) * e * mx + e * e * c.to[0];
+      c.y = (1 - e) * (1 - e) * c.from[1] + 2 * (1 - e) * e * my + e * e * c.to[1];
+      c.el.style.transform = `translate3d(${c.x.toFixed(1)}px, ${c.y.toFixed(1)}px, 0)`;
+      if (resting) c.el.dataset.state = 'rest';
+    }
+    running = !document.hidden;
+    if (running) requestAnimationFrame(frame);
+  };
+  const start = () => {
+    if (running || document.hidden) return;
+    running = true;
+    requestAnimationFrame(frame);
+  };
+  start();
+  document.addEventListener('visibilitychange', start);
+}
+
 export function initFx(): void {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   annotate();
-  boot(() => {});
+  boot(cursors);
 }
