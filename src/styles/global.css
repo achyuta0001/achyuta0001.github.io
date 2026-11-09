@@ -1,29 +1,4 @@
 :root {
-  --bg: #fafaf9;
-  --fg: #171717;
-  --muted: #57534e;
-  --line: #e7e5e4;
-  --accent: #c2410c;
-  --focus: #c2410c;
-  --surface: #ffffff;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.08);
-  --sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
-  color-scheme: light dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #0c0c0c;
-    --fg: #ededed;
-    --muted: #a1a1aa;
-    --line: #262626;
-    --accent: #fb923c;
-    --focus: #fb923c;
-    --surface: #161616;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.5);
-  }
-}
-:root[data-theme='dark'] {
   --bg: #0c0c0c;
   --fg: #ededed;
   --muted: #a1a1aa;
@@ -32,9 +7,11 @@
   --focus: #fb923c;
   --surface: #161616;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.5);
+  --sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
   color-scheme: dark;
 }
-:root[data-theme='light'] { color-scheme: light; }
+body { background: var(--bg); }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: 2rem; }

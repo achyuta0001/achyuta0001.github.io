@@ -74,7 +74,6 @@ test.describe('without JavaScript', () => {
       await expect(page.locator(`#${id}`)).toBeVisible();
       expect(await page.locator(`#${id}`).evaluate((e) => getComputedStyle(e).opacity)).toBe('1');
     }
-    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
     await expect(page.locator('[data-palette-trigger]')).toBeHidden();
   });
 });

@@ -25,15 +25,3 @@
 .prose th, .prose td { text-align: left; padding: 0.45rem 0.75rem 0.45rem 0; border-bottom: 1px solid var(--line); }
 .prose th { font-weight: 600; }
 .prose td[align='right'], .prose th[align='right'] { text-align: right; padding-right: 0; }
-
-/* Shiki renders light colours inline and dark ones as --shiki-dark variables. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .astro-code,
-  :root:not([data-theme='light']) .astro-code span {
-    color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
-  }
-}
-:root[data-theme='dark'] .astro-code,
-:root[data-theme='dark'] .astro-code span {
-  color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
-}
