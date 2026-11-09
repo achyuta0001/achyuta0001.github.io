@@ -38,7 +38,7 @@ test('contact links and photography link are correct', async ({ page }) => {
   const c = page.locator('#contact');
   await expect(c.getByRole('link', { name: 'achyuta0001@gmail.com' })).toHaveAttribute('href', 'mailto:achyuta0001@gmail.com');
   await expect(c.getByRole('link', { name: 'GitHub' })).toHaveAttribute('href', 'https://github.com/achyuta0001');
-  await expect(c.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://linkedin.com/in/achyuta-k-upadya');
+  await expect(c.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/achyuta-k-upadya-2985b01b2/');
   await expect(c.getByRole('link', { name: 'Resume' })).toHaveAttribute('href', '/resume.pdf');
   await expect(page.locator('#about a')).toHaveAttribute('href', 'https://achyuta0001.github.io/photography-portfolio/');
 });
@@ -93,7 +93,7 @@ test('home page describes the owner as a schema.org Person', async ({ page }) =>
   });
   expect(ld.sameAs).toEqual([
     'https://github.com/achyuta0001',
-    'https://linkedin.com/in/achyuta-k-upadya',
+    'https://www.linkedin.com/in/achyuta-k-upadya-2985b01b2/',
     'https://achyuta0001.github.io/photography-portfolio/',
   ]);
 });

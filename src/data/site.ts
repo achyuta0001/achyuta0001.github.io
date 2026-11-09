@@ -23,7 +23,7 @@ const GH = 'https://github.com/achyuta0001';
 
 export const links = {
   github: { label: 'GitHub', href: GH },
-  linkedin: { label: 'LinkedIn', href: 'https://linkedin.com/in/achyuta-k-upadya' },
+  linkedin: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/achyuta-k-upadya-2985b01b2/' },
   resume: { label: 'Resume', href: '/resume.pdf' },
   photography: { label: 'Photography', href: 'https://achyuta0001.github.io/photography-portfolio/' },
 } satisfies Record<string, Link>;
