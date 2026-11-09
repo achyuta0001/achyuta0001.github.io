@@ -1,9 +1,9 @@
 ---
-import '@fontsource-variable/geist';
+import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource-variable/geist-mono';
 import '../styles/global.css';
 import { meta } from '../data/site';
-import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 import geistMonoLatin from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 
 interface Props { title?: string; description?: string }
@@ -19,10 +19,9 @@ const og = new URL('/og.png', Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#fafaf9" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)" />
-    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={geistMonoLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -39,10 +38,6 @@ const og = new URL('/og.png', Astro.site).href;
       (function () {
         var d = document.documentElement;
         d.classList.add('js');
-        try {
-          var t = localStorage.getItem('theme');
-          if (t === 'light' || t === 'dark') d.dataset.theme = t;
-        } catch (e) {}
         window.__paletteWanted = false;
         function want(detail) {
           if (window.__paletteReady) document.dispatchEvent(new CustomEvent('palette:open', { detail: detail }));

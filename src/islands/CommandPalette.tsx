@@ -1,6 +1,5 @@
 import { Command } from 'cmdk';
 import { useEffect, useRef, useState } from 'react';
-import { cycleTheme } from '../scripts/theme';
 import '../styles/palette.css';
 
 declare global {
@@ -105,7 +104,6 @@ export default function CommandPalette({ email, sections, links, projects }: Pro
             </Command.Group>
             <Command.Group heading="Actions">
               <Command.Item onSelect={copyEmail}>Copy email</Command.Item>
-              <Command.Item onSelect={() => setStatus(`Theme: ${cycleTheme()}`)}>Toggle theme</Command.Item>
             </Command.Group>
             <Command.Group heading="Links">
               {links.map((l) => (

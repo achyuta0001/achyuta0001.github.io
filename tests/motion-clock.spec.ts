@@ -43,11 +43,13 @@ test('footer clock shows IST time for a frozen instant', async ({ page }) => {
 });
 
 test('sections on screen at load appear without fading in', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 2000 });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   const work = await page.locator('#work').evaluate((e) => ({
+    onScreen: e.getBoundingClientRect().top < innerHeight,
     opacity: getComputedStyle(e).opacity,
     running: e.getAnimations().length,
   }));
-  expect(work).toEqual({ opacity: '1', running: 0 });
+  expect(work).toEqual({ onScreen: true, opacity: '1', running: 0 });
   await expect(page.locator('#contact')).not.toHaveClass(/\bin\b/);
 });

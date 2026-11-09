@@ -1,11 +1,13 @@
 ---
 import { profile, links } from '../data/site';
+import SecIndex from './SecIndex.astro';
 const items = [links.github, links.linkedin, links.resume];
 ---
 <section id="contact" class="section" data-reveal tabindex="-1" aria-labelledby="contact-h">
-  <h2 id="contact-h">Let’s work together</h2>
+  <SecIndex id="contact" />
+  <h2 id="contact-h" data-fx-label="h2 · contact">Let’s work together</h2>
   <p class="lead">Open to full-stack and platform roles. The fastest way to reach me is email.</p>
-  <p><a class="email" href={`mailto:${profile.email}`}>{profile.email}</a></p>
+  <p class="email-line"><a class="email" href={`mailto:${profile.email}`}>{profile.email}</a></p>
   <ul class="contact-links mono">
     {items.map((l) => (
       <li><a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel={l.href.startsWith('http') ? 'noopener' : undefined}>{l.label}</a></li>
@@ -13,7 +15,15 @@ const items = [links.github, links.linkedin, links.resume];
   </ul>
 </section>
 <style>
-  .lead { margin-top: 0; }
-  .email { font-size: 1.25rem; font-weight: 500; }
-  .contact-links { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; }
+  .lead { margin: -1.5rem 0 2rem; color: var(--muted); max-width: 56ch; }
+  .email-line { margin: 0; }
+  .email {
+    display: inline-block; max-width: 100%; overflow-wrap: anywhere;
+    font-size: clamp(1.75rem, 6.5vw, 4.5rem); font-weight: 800; font-stretch: 70%; line-height: 1;
+    text-decoration: none; color: var(--red);
+  }
+  .email:hover { color: var(--fg); }
+  .contact-links { list-style: none; padding: 0; margin: 2.5rem 0 0; display: flex; flex-wrap: wrap; gap: 1.5rem; font-size: 0.875rem; }
+  .contact-links a { color: var(--muted); }
+  .contact-links a:hover { color: var(--fg); }
 </style>

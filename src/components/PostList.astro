@@ -7,15 +7,19 @@ const { posts } = Astro.props;
 <ul class="posts">
   {posts.map((p) => (
     <li>
-      <a class="post-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
-      <p class="muted post-desc">{p.data.description}</p>
-      <time class="mono muted post-date" datetime={p.data.date.toISOString().slice(0, 10)}>{postDate(p.data.date)}</time>
+      <time class="mono post-date" datetime={p.data.date.toISOString().slice(0, 10)}>{postDate(p.data.date)}</time>
+      <div>
+        <a class="post-title" href={`/writing/${p.id}/`}>{p.data.title}</a>
+        <p class="muted post-desc">{p.data.description}</p>
+      </div>
     </li>
   ))}
 </ul>
 <style>
-  .posts { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
-  .post-title { font-weight: 600; text-decoration: none; }
-  .post-desc { margin: 0.25rem 0; font-size: 0.9375rem; }
-  .post-date { font-size: 0.75rem; }
+  .posts { list-style: none; margin: 0; padding: 0; }
+  .posts li { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 0.5rem 2rem; padding-block: 1.5rem; border-top: 1px solid var(--line); }
+  @media (max-width: 760px) { .posts li { grid-template-columns: 1fr; } }
+  .post-title { font-size: clamp(1.25rem, 2.4vw, 1.625rem); font-weight: 700; font-stretch: 85%; line-height: 1.2; text-decoration: none; }
+  .post-desc { margin: 0.5rem 0 0; max-width: 60ch; }
+  .post-date { font-size: 0.8125rem; color: var(--red); padding-top: 0.35rem; }
 </style>

@@ -1,13 +1,23 @@
 ---
 import { profile } from '../data/site';
+import SecIndex from './SecIndex.astro';
 const last = profile.about.length - 1;
 ---
 <section id="about" class="section" data-reveal tabindex="-1" aria-labelledby="about-h">
-  <h2 id="about-h">About</h2>
-  {profile.about.map((para, i) => (
-    <p>
-      {para}
-      {i === last && <> <a href={profile.photography.href}>{profile.photography.label}</a></>}
-    </p>
-  ))}
+  <SecIndex id="about" />
+  <h2 id="about-h" data-fx-label="h2 · about">About</h2>
+  <div class="about-body">
+    {profile.about.map((para, i) => (
+      <p class:list={{ first: i === 0 }}>
+        {para}
+        {i === last && <> <a href={profile.photography.href}>{profile.photography.label}</a></>}
+      </p>
+    ))}
+  </div>
 </section>
+<style>
+  .about-body { columns: 2 22rem; column-gap: 3rem; }
+  .about-body p { margin: 0 0 1.25rem; break-inside: avoid; color: var(--muted); }
+  .about-body p.first { color: var(--fg); font-size: 1.25rem; font-weight: 500; line-height: 1.45; }
+  .about-body a { color: var(--fg); text-decoration-color: var(--red); }
+</style>

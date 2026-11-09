@@ -76,7 +76,7 @@ Section ids are fixed: `#work`, `#experience`, `#stack`, `#about`, `#contact`.
       photography." (absolute URL) to `https://achyuta0001.github.io/photography-portfolio/`.
    No certifications and no Goo line (owner's call).
 6. **Contact** (`#contact`) — "Let's work together": email (achyuta0001@gmail.com), GitHub,
-   LinkedIn (`https://linkedin.com/in/achyuta-k-upadya`), resume PDF (`/resume.pdf`).
+   LinkedIn (`https://www.linkedin.com/in/achyuta-k-upadya-2985b01b2/`), resume PDF (`/resume.pdf`).
 7. **Footer** — `Bengaluru · <time>HH:MM</time> IST`, theme toggle button, `© <year> Achyuta K Upadya`.
 
 ### Excluded on purpose

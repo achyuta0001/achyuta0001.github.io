@@ -1,13 +1,56 @@
 ---
-import { profile } from '../data/site';
+import { profile, sections, links, heroStats } from '../data/site';
+import ashlarSession from '../../scripts/captures/ashlar.txt?raw';
+const lines = ashlarSession.trimEnd().split('\n');
 ---
-<header class="site-header hero">
-  <h1>{profile.name}</h1>
-  <p class="hero-role">{profile.role} in {profile.location}.</p>
-  <p class="hero-tagline muted">{profile.tagline}</p>
-  <button type="button" class="palette-trigger mono" data-palette-trigger>
-    <kbd data-kbd>⌘K</kbd><span class="visually-hidden"> command palette</span>
-  </button>
+<header class="site-header wide hero">
+  <nav class="topbar" aria-label="Sections" data-fx-label="nav · sections">
+    <a class="mark" href="/" aria-label={`${profile.name}, home`}><span aria-hidden="true">AKU</span></a>
+    <ul class="toplinks mono">
+      {sections.map((s) => <li><a href={`#${s.id}`}>{s.label.toLowerCase()}</a></li>)}
+    </ul>
+    <button type="button" class="palette-trigger mono" data-palette-trigger>
+      <kbd data-kbd>⌘K</kbd><span class="visually-hidden"> command palette</span>
+    </button>
+  </nav>
+
+  <div class="stage" data-fx-stage>
+    <p class="display" aria-hidden="true" data-fx-label="display · platform">Platform</p>
+
+    <div class="intro">
+      <div class="copy">
+        <p class="hello mono">hello, I’m</p>
+        <h1 data-fx-label="h1 · name"><span>{profile.name}</span></h1>
+        <p class="role" data-fx-label="p · role">{profile.role} in {profile.location}.</p>
+        <p class="tagline" data-fx-label="p · tagline">{profile.tagline}</p>
+        <p class="cta" data-fx-label="nav · actions">
+          <a class="btn btn-solid" href="#work">See the work</a>
+          <a class="btn" href={`mailto:${profile.email}`}>Email me</a>
+          <a class="btn" href={links.resume.href}>Resume</a>
+        </p>
+      </div>
+
+      <figure class="term" data-fx-label="figure · ashlar">
+        <div class="term-bar mono">
+          <span class="term-dot" aria-hidden="true"></span>
+          <span>ashlar</span>
+          <span class="muted">recovering a log cut mid-write</span>
+        </div>
+        <pre class="term-body mono" tabindex="0" aria-label="Terminal session: ashlar appends four records, the store file is cut mid-record, and the log reopens with the three intact records."><code>{lines.map((l) => (
+          <span class:list={['ln', { cmd: l.startsWith('$'), note: l.startsWith('#') }]}>{l}</span>
+        ))}</code></pre>
+      </figure>
+    </div>
+
+    <dl class="stats">
+      {heroStats.map((s) => (
+        <div class="stat" data-fx-label={`stat · ${s.value}`}>
+          <dt class="mono">{s.label}</dt>
+          <dd>{s.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
 </header>
 <script is:inline>
   (function () {
@@ -19,16 +62,96 @@ import { profile } from '../data/site';
   })();
 </script>
 <style>
-  .hero { padding-block: 6rem 3.5rem; }
-  .hero h1 { font-size: 1.125rem; margin: 0; }
-  .hero-role { font-size: 1.125rem; margin: 0.25rem 0 1.25rem; }
-  .hero-tagline { margin: 0 0 2rem; max-width: 52ch; }
+  .hero { position: relative; padding-bottom: clamp(3.5rem, 8vw, 6rem); }
+
+  .topbar {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding-block: 1.25rem; border-bottom: 1px solid var(--line);
+  }
+  .mark {
+    display: inline-grid; place-items: center; height: 28px; padding: 0 0.5rem;
+    background: var(--red); color: #000; text-decoration: none;
+    font: 800 0.95rem/1 var(--sans); font-stretch: 70%; letter-spacing: 0.02em;
+  }
+  .mark:hover { color: #000; background: var(--fg); }
+  .toplinks { display: flex; gap: 1.25rem; list-style: none; margin: 0 auto 0 0; padding: 0; font-size: 0.8125rem; }
+  .toplinks a { color: var(--muted); text-decoration: none; }
+  .toplinks a:hover { color: var(--fg); }
+  @media (max-width: 760px) { .toplinks { display: none; } .palette-trigger { margin-left: auto; } }
+
   .palette-trigger {
-    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.6rem;
-    border: 1px solid var(--muted); border-radius: 6px; background: transparent; cursor: pointer;
-    font-size: 0.8125rem; color: var(--muted);
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.6rem;
+    border: 1px solid var(--line); background: transparent; cursor: pointer;
+    font-size: 0.75rem; color: var(--muted);
   }
   :global(html:not(.js)) .palette-trigger { display: none; }
   .palette-trigger:hover { color: var(--fg); border-color: var(--muted); }
   kbd { font: inherit; }
+
+  .stage { position: relative; padding-top: clamp(1.5rem, 4vw, 3rem); }
+
+  /* The one loud element: the role word, outlined in red, full measure. */
+  .display {
+    margin: 0; user-select: none;
+    font-weight: 800; font-stretch: 62%; text-transform: uppercase;
+    font-size: min(calc((100vw - 2 * var(--gutter)) / 3.9), 287px); line-height: 0.8; letter-spacing: -0.01em;
+    color: transparent; -webkit-text-stroke: 2px var(--red);
+    white-space: nowrap;
+  }
+
+  .intro {
+    position: relative; display: grid; gap: clamp(2rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: end;
+    margin-top: 1.5rem;
+  }
+  /* Side by side, the terminal and the name block ride up over the display word. */
+  @media (min-width: 900px) { .intro { margin-top: clamp(-7rem, -7vw, -4rem); } }
+  @media (max-width: 899px) { .intro { grid-template-columns: 1fr; } }
+
+  .hello { margin: 0 0 0.5rem; font-size: 0.875rem; color: var(--fg); }
+  h1 { margin: 0; font-size: clamp(2.5rem, 7vw, 5rem); font-stretch: 68%; font-weight: 800; line-height: 1; }
+  h1 span {
+    display: inline; background: var(--red); color: #000; padding: 0.02em 0.14em 0.06em;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+  .role { margin: 1.5rem 0 0.5rem; font-size: clamp(1.125rem, 2vw, 1.375rem); font-weight: 600; }
+  .tagline { margin: 0; max-width: 46ch; color: var(--muted); }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 0.625rem; margin: 2rem 0 0; }
+  .btn {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem;
+    border: 1px solid var(--line); text-decoration: none; font-size: 0.9375rem; font-weight: 600;
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+  }
+  .btn:hover { border-color: var(--fg); color: var(--fg); }
+  .btn-solid { background: var(--fg); color: #000; border-color: var(--fg); }
+  .btn-solid:hover { background: var(--red); border-color: var(--red); color: #000; }
+
+  .term { margin: 0; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); min-width: 0; }
+  .term-bar {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--line); font-size: 0.75rem;
+  }
+  .term-bar .muted { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .term-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; flex: none; }
+  .term-body { margin: 0; padding: 1rem 1.1rem; font-size: 0.78rem; line-height: 1.65; overflow-x: auto; }
+  .term-body code { display: grid; }
+  .ln { color: var(--muted); white-space: pre; }
+  .ln.cmd { color: var(--fg); }
+  .ln.note { color: var(--red); }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .stat { padding: 1rem 1rem 0 0; }
+  .stat + .stat { padding-left: 1rem; border-left: 1px solid var(--line); }
+  .stat dd { margin: 0; font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; font-stretch: 70%; line-height: 1; }
+  .stat dt { font-size: 0.75rem; color: var(--muted); margin-top: 0.4rem; }
+  .stat { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+  @media (max-width: 700px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(3) { padding-left: 0; border-left: 0; }
+    .stat:nth-child(n + 3) { border-top: 1px solid var(--line); margin-top: 1rem; }
+  }
 </style>

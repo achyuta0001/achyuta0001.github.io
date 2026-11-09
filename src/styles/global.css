@@ -1,66 +1,71 @@
+/* Dark only. Black field, one signal red, and a blueprint cyan that is used
+   only by the annotation layer (boot intro, scroll callouts, cursors). */
 :root {
-  --bg: #fafaf9;
-  --fg: #171717;
-  --muted: #57534e;
-  --line: #e7e5e4;
-  --accent: #c2410c;
-  --focus: #c2410c;
-  --surface: #ffffff;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.08);
-  --sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
-  color-scheme: light dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg: #0c0c0c;
-    --fg: #ededed;
-    --muted: #a1a1aa;
-    --line: #262626;
-    --accent: #fb923c;
-    --focus: #fb923c;
-    --surface: #161616;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.5);
-  }
-}
-:root[data-theme='dark'] {
-  --bg: #0c0c0c;
-  --fg: #ededed;
-  --muted: #a1a1aa;
+  --bg: #000000;
+  --surface: #0c0c0c;
+  --raised: #141414;
+  --fg: #f1efec;
+  --muted: #9a9894;
   --line: #262626;
-  --accent: #fb923c;
-  --focus: #fb923c;
-  --surface: #161616;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.5);
+  --red: #ff3b2f;
+  --red-deep: #c4170c;
+  --cyan: #45c8ff;
+  --accent: var(--red);
+  --focus: var(--cyan);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px rgb(0 0 0 / 0.6);
+  --sans: 'Archivo Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --wide: 1200px;
+  --gutter: clamp(16px, 4vw, 40px);
   color-scheme: dark;
 }
-:root[data-theme='light'] { color-scheme: light; }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 2rem; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 2rem; background: var(--bg); }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
   font: 400 16px/1.6 var(--sans);
+  font-stretch: 100%;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
-main, .site-footer, .site-header { max-width: 680px; margin-inline: auto; padding-inline: 20px; }
+::selection { background: var(--red); color: #000; }
+
+/* Sub-pages (writing, 404) keep a reading column; the home page opts into the wide grid. */
+main, .site-footer, .site-header { max-width: 720px; margin-inline: auto; padding-inline: 20px; }
+.wide { max-width: var(--wide); padding-inline: var(--gutter); }
+/* The footer's rule should line up with the section rules, which sit inside main's padding. */
+.site-footer.wide { width: calc(100% - 2 * var(--gutter)); max-width: calc(var(--wide) - 2 * var(--gutter)); padding-inline: 0; }
+
 a { color: inherit; text-decoration-color: var(--line); text-underline-offset: 3px; }
-a:hover { color: var(--accent); text-decoration-color: currentColor; }
-:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
-h1, h2, h3 { line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; }
-h2 { font-size: 0.8125rem; font-family: var(--mono); font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 1.5rem; }
+a:hover { color: var(--red); text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; }
 .mono { font-family: var(--mono); }
 .muted { color: var(--muted); }
-.section { padding-block: 3.5rem; border-top: 1px solid var(--line); outline: none; }
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
-.skip { position: absolute; left: 12px; top: -48px; padding: 8px 12px; background: var(--fg); color: var(--bg); border-radius: 6px; z-index: 10; }
+.skip { position: absolute; left: 12px; top: -48px; padding: 8px 12px; background: var(--red); color: #000; z-index: 50; }
 .skip:focus { top: 12px; }
 button { font: inherit; color: inherit; }
+
+/* Section frame: a mono index line ("// 02 experience  [02/06]") over a large condensed heading. */
+.section { position: relative; padding-block: clamp(3.5rem, 7vw, 6rem); border-top: 1px solid var(--line); outline: none; }
+.sec-index {
+  display: flex; justify-content: space-between; gap: 1rem;
+  font: 400 0.75rem/1 var(--mono); color: var(--muted); margin: 0 0 1.25rem;
+}
+.sec-index b { color: var(--red); font-weight: 400; }
+.section h2 {
+  position: relative; display: inline-block;
+  font-size: clamp(2.25rem, 6vw, 4.25rem); font-stretch: 72%; font-weight: 800;
+  line-height: 0.95; letter-spacing: -0.005em; margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+}
+.sec-lede { max-width: 56ch; color: var(--muted); margin: -1.5rem 0 3rem; }
 
 [data-reveal] { transition: opacity 500ms ease, transform 500ms ease; }
 html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(8px); }
@@ -70,4 +75,5 @@ html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(8px); }
 }
 @media print {
   html.js [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .fx-layer { display: none !important; }
 }

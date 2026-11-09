@@ -1,0 +1,12 @@
+---
+// "// 02 experience            [02/06]" — the section's place on the page.
+import { sections, type Section } from '../data/site';
+interface Props { id: Section['id'] }
+const { id } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const i = sections.findIndex((s) => s.id === id) + 1;
+---
+<p class="sec-index" aria-hidden="true">
+  <span><b>//</b> {pad(i)} {id}</span>
+  <span>[{pad(i)}/{pad(sections.length)}]</span>
+</p>

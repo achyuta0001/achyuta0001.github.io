@@ -75,13 +75,6 @@ test('copy email failure shows the address', async ({ page }) => {
   await expect(page.getByRole('status')).toHaveText('Couldn’t copy — achyuta0001@gmail.com');
 });
 
-test('toggle theme command cycles theme', async ({ page }) => {
-  await page.goto('/');
-  await page.keyboard.press('Control+k');
-  await page.getByRole('option', { name: 'Toggle theme' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-});
-
 test('trigger label is platform-appropriate', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-kbd]')).toHaveText(/^(⌘K|Ctrl K|Menu)$/);

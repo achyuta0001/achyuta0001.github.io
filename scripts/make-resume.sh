@@ -3,6 +3,9 @@
 set -euo pipefail
 SRC="$HOME/Developer/job-search"
 OUT="$(cd "$(dirname "$0")/.." && pwd)/public/resume.pdf"
+# md-to-pdf's bundled Chrome is often not downloaded; fall back to the installed one.
+SYS_CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+if [ -z "${PUPPETEER_EXECUTABLE_PATH:-}" ] && [ -x "$SYS_CHROME" ]; then export PUPPETEER_EXECUTABLE_PATH="$SYS_CHROME"; fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 sed -E 's/ ?\+91 ?[0-9 ]{10,12} ?·//' "$SRC/resume_master.md" > "$TMP/resume.md"
