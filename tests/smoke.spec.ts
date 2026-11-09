@@ -17,3 +17,12 @@ test('dark only: head declares one scheme, canonical and OG; no theme toggle', a
   await expect(page.locator('html')).not.toHaveAttribute('data-theme');
 });
 
+test('section index lines number the sections and stay out of the accessibility tree', async ({ page }) => {
+  await page.goto('/');
+  const idx = page.locator('main .sec-index');
+  await expect(idx).toHaveCount(6);
+  await expect(idx.first()).toHaveAttribute('aria-hidden', 'true');
+  await expect(idx.first()).toContainText('01 work');
+  await expect(idx.last()).toContainText('[06/06]');
+});
+

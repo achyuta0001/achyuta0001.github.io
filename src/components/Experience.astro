@@ -1,26 +1,39 @@
 ---
 import { employer } from '../data/site';
+import SecIndex from './SecIndex.astro';
 ---
 <section id="experience" class="section" data-reveal tabindex="-1" aria-labelledby="experience-h">
-  <h2 id="experience-h">Experience</h2>
+  <SecIndex id="experience" />
+  <h2 id="experience-h" data-fx-label="h2 · experience">Experience</h2>
   <div class="employer">
     <h3>{employer.name}</h3>
-    <p class="mono muted meta">{employer.location} · {employer.period}</p>
+    <p class="mono muted meta">{employer.location}, {employer.period}</p>
   </div>
-  {employer.roles.map((r) => (
-    <article class="role">
-      <h4>{r.title} <span class="muted">— {r.team}</span></h4>
-      <p class="mono muted meta">{r.period}</p>
-      <p class="mono muted stackline">{r.stack}</p>
-      <ul>{r.bullets.map((b) => <li>{b}</li>)}</ul>
-    </article>
-  ))}
+  <ol class="roles">
+    {employer.roles.map((r) => (
+      <li class="role">
+        <p class="mono period">{r.period}</p>
+        <div>
+          <h4>{r.title} <span class="muted">— {r.team}</span></h4>
+          <p class="mono muted stackline">{r.stack}</p>
+          <ul>{r.bullets.map((b) => <li>{b}</li>)}</ul>
+        </div>
+      </li>
+    ))}
+  </ol>
 </section>
 <style>
-  .employer h3 { margin: 0; font-size: 1rem; }
-  .meta { font-size: 0.8125rem; margin: 0.15rem 0 0; }
-  .role { margin-top: 1.75rem; }
-  .role h4 { margin: 0; font-size: 0.9375rem; font-weight: 600; }
-  .stackline { font-size: 0.75rem; margin: 0.35rem 0 0; }
-  .role ul { margin: 0.75rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; font-size: 0.9375rem; }
+  .employer { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
+  .employer h3 { margin: 0; font-size: clamp(1.25rem, 2.4vw, 1.625rem); font-stretch: 85%; }
+  .meta { font-size: 0.8125rem; margin: 0; }
+  .roles { list-style: none; margin: 0; padding: 0; }
+  .role { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1rem 2rem; padding-block: 2rem; }
+  .role + .role { border-top: 1px solid var(--line); }
+  @media (max-width: 760px) { .role { grid-template-columns: 1fr; } }
+  .period { margin: 0.2rem 0 0; font-size: 0.8125rem; color: var(--red); }
+  .role h4 { margin: 0; font-size: 1.125rem; font-weight: 700; }
+  .stackline { font-size: 0.75rem; margin: 0.4rem 0 0; }
+  .role ul { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; max-width: 70ch; }
+  .role ul li { position: relative; padding-left: 1.25rem; }
+  .role ul li::before { content: ''; position: absolute; left: 0; top: 0.7em; width: 0.5rem; height: 1px; background: var(--red); }
 </style>

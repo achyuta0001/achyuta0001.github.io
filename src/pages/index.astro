@@ -24,7 +24,7 @@ const person = {
 <Base>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(person).replace(/</g, '\\u003c')} />
   <Hero />
-  <main id="main" tabindex="-1">
+  <main id="main" class="wide" tabindex="-1">
     <Work />
     <Experience />
     <Stack />
@@ -32,7 +32,7 @@ const person = {
     <About />
     <Contact />
   </main>
-  <Footer />
+  <Footer wide />
 </Base>
 <script>
   import { initReveal } from '../scripts/reveal';

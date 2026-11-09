@@ -1,9 +1,11 @@
 ---
 import { stack } from '../data/site';
+import SecIndex from './SecIndex.astro';
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 <section id="stack" class="section" data-reveal tabindex="-1" aria-labelledby="stack-h">
-  <h2 id="stack-h">Stack</h2>
+  <SecIndex id="stack" />
+  <h2 id="stack-h" data-fx-label="h2 · stack">Stack</h2>
   <div class="tabs" data-tabs>
     <div class="panels" data-tab-panels>
       {stack.map((g) => (
@@ -20,19 +22,23 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   document.querySelectorAll<HTMLElement>('[data-tabs]').forEach(initTabs);
 </script>
 <style>
-  .panel h3 { font-size: 0.875rem; margin: 1.25rem 0 0.5rem; }
+  .panel h3 { font-size: 0.875rem; font-family: var(--mono); font-weight: 400; color: var(--muted); margin: 1.5rem 0 0.75rem; }
   .panel:first-child h3 { margin-top: 0; }
   .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .chips li { border: 1px solid var(--line); border-radius: 8px; padding: 0.3rem 0.65rem; font-size: 0.875rem; }
+  .chips li {
+    border: 1px solid var(--line); background: var(--surface); padding: 0.55rem 0.9rem;
+    font-size: clamp(1rem, 1.8vw, 1.25rem); font-weight: 600; font-stretch: 85%;
+  }
   .tabs-ready .panels { display: grid; }
   .tabs-ready .panel { grid-area: 1 / 1; visibility: hidden; }
   .tabs-ready .panel.is-active { visibility: visible; }
   .tabs-ready .panel:focus-visible { outline-offset: 6px; }
 </style>
 <style is:global>
-  .tablist { position: relative; display: flex; gap: 0.25rem; margin-bottom: 1.25rem; box-shadow: inset 0 -1px 0 var(--line); overflow-x: auto; scrollbar-width: none; }
+  .tablist { position: relative; display: flex; gap: 0.25rem; margin-bottom: 1.5rem; box-shadow: inset 0 -1px 0 var(--line); overflow-x: auto; scrollbar-width: none; }
   .tablist::-webkit-scrollbar { display: none; }
-  .tab { flex: none; background: none; border: 0; padding: 0.5rem 0.75rem; cursor: pointer; color: var(--muted); font-size: 0.8125rem; }
+  .tab { flex: none; background: none; border: 0; padding: 0.6rem 0.9rem; cursor: pointer; color: var(--muted); font-size: 0.8125rem; }
+  .tab:hover { color: var(--fg); }
   .tab[aria-selected='true'] { color: var(--fg); }
-  .tab-indicator { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--accent); transition: transform 250ms ease, width 250ms ease; }
+  .tab-indicator { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--red); transition: transform 250ms ease, width 250ms ease; }
 </style>

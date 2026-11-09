@@ -45,7 +45,7 @@ test('contact links and photography link are correct', async ({ page }) => {
 
 test('about tells the side-project story in three paragraphs', async ({ page }) => {
   await page.goto('/');
-  const paras = page.locator('#about p');
+  const paras = page.locator('#about .about-body p');
   await expect(paras).toHaveCount(3);
   await expect(paras.nth(1)).toContainText('ashlar started as a question');
   await expect(paras.nth(2).getByRole('link')).toHaveText('Away from the keyboard I shoot product photography.');
